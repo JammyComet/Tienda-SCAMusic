@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}detalle-blog1{% endblock %}
+
+{% block contenido %}
+<main>
+        <section class="detalle-blog py-5">
+            <div class="container">
+                <h1 class="text-white text-center fw-bold mb-5">La historia de la camiseta alba</h1>
+
+                <article class="blog-card row align-items-center g-4 p-4 m-0">
+                    <div class="col-12 col-lg-7">
+                        <p class="blog-detail-text mb-0">
+                            La camiseta de Colo-Colo ha acompañado al club durante distintas etapas
+                            de su historia. Su tradicional color blanco se ha convertido en uno de los
+                            principales símbolos que identifican al equipo y a sus seguidores. A lo largo
+                            de los años, los diseños han incorporado diferentes detalles, manteniendo siempre
+                            la identidad característica del club.
+                        </p>
+                    </div>
+
+                    <div class="col-12 col-lg-5">
+                        <img src="{{ url_for('static', filename='imagenes/blog1.png') }}" alt="Historia de la camiseta de Colo-Colo" class="img-fluid detail-blog-img w-100">
+                    </div>
+
+                    <div class="col-12">
+                        <a href="{{ url_for('blogs') }}" class="btn btn-danger fw-bold">VOLVER A BLOGS</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+{% endblock %}

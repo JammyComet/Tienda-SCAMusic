@@ -1,0 +1,256 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+}
+
+.site-header {
+    position: relative;
+    z-index: 9999;
+    font-family: 'Rajdhani', Arial, sans-serif;
+    font-weight: 900;
+}
+
+.site-logo {
+    width: 100px;
+    height: auto;
+}
+
+.brand-title {
+    line-height: 1;
+}
+
+.colo,
+.tienda,
+.oficial {
+    display: block;
+    font-weight: 900;
+}
+
+.colo {
+    color: black;
+    font-size: 16px;
+    letter-spacing: 3px;
+    margin-left: 4px;
+}
+
+.tienda {
+    color: red;
+    font-size: 30px;
+    letter-spacing: 5px;
+}
+
+.oficial {
+    color: black;
+    font-size: 10px;
+    letter-spacing: 14px;
+}
+
+
+.info-tienda {
+    min-height: 300px;
+}
+
+.co {
+    color: white;
+    font-size: 16px;
+    font-weight: 900;
+    letter-spacing: 3px;
+}
+
+.aura {
+    color: red;
+    font-size: clamp(55px, 9vw, 100px);
+    font-weight: 900;
+    letter-spacing: clamp(15px, 5vw, 60px);
+}
+
+.hero-img {
+    max-height: 300px;
+    object-fit: contain;
+}
+
+.product-card {
+    background-color: #e5e5e5;
+    border: 0;
+    border-radius: 0;
+}
+
+.product-card .card-img-top {
+    height: 180px;
+    object-fit: contain;
+    background-color: white;
+    border-radius: 0;
+}
+
+.product-name {
+    font-size: 13px;
+    font-weight: normal;
+    text-align: center;
+}
+
+.product-price {
+    font-size: 12px;
+    text-align: right;
+    margin-bottom: 0;
+}
+
+
+.titulo-lineas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    font-size: 30px;
+}
+
+.titulo-lineas::before,
+.titulo-lineas::after {
+    content: "";
+    flex: 1;
+    max-width: 180px;
+    height: 2px;
+    background-color: black;
+}
+
+.form-contenedor {
+    width: 600px;
+    max-width: 90%;
+}
+
+.textarea-contacto {
+    height: 120px;
+}
+
+.titulo2 {
+    color: white;
+    font-size: 25px;
+    font-weight: 900;
+    letter-spacing: 3px;
+}
+
+.titulo2 span {
+    color: red;
+    font-size: 35px;
+    margin-top: 5px;
+}
+
+.ayuda-img {
+    max-width: 400px;
+    height: 240px;
+    object-fit: contain;
+}
+
+
+.nosotros {
+    min-height: 100vh;
+    background-image: url("../imagenes/fondo.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.span1 {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: normal;
+    font-size: 40px;
+}
+
+.span2 {
+    font-family: Georgia, serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 60px;
+}
+
+.nosotros-texto {
+    width: min(100%, 760px);
+    font-size: 18px;
+    line-height: 1.6;
+    white-space: pre-line;
+}
+
+.desarrolladores h2 {
+    font-family: Georgia, serif;
+    font-size: 40px;
+}
+
+.developer-card {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.developer-img {
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+}
+
+
+.blogs,
+.detalle-blog {
+    background-color: #111;
+    min-height: 100vh;
+}
+
+.blog-card {
+    background-color: #050505;
+    border-left: 8px solid #d00000;
+    border-right: 8px solid #0057b8;
+}
+
+.blog-description {
+    color: #cccccc;
+    font-size: 17px;
+    line-height: 1.5;
+}
+
+.blog-img {
+    height: 250px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.blog-detail-text {
+    color: #dddddd;
+    font-size: 18px;
+    line-height: 1.7;
+}
+
+.detail-blog-img {
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+@media (max-width: 767.98px) {
+    .site-header .container-fluid {
+        justify-content: center;
+    }
+
+    .site-header nav {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .titulo-lineas {
+        font-size: 22px;
+        gap: 10px;
+    }
+
+    .span2 {
+        font-size: 45px;
+    }
+}
+
+
+.blogs .btn-danger,
+.detalle-blog .btn-danger {
+    background-color: #d00000;
+    border-color: #d00000;
+}
+
+.blogs .btn-danger:hover,
+.detalle-blog .btn-danger:hover {
+    background-color: #0057b8;
+    border-color: #0057b8;
+}

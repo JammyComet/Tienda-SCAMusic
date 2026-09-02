@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}detalle-blog2{% endblock %}
+
+{% block contenido %}
+<main>
+        <section class="detalle-blog py-5">
+            <div class="container">
+                <h1 class="text-white text-center fw-bold mb-5">Colo-Colo y su historia en el fútbol chileno</h1>
+
+                <article class="blog-card row align-items-center g-4 p-4 m-0">
+                    <div class="col-12 col-lg-7">
+                        <p class="blog-detail-text mb-0">
+                            Desde su fundación, Colo-Colo ha construido una importante historia
+                            dentro del fútbol chileno. El club ha conseguido numerosos títulos y
+                            se ha convertido en una institución reconocida tanto a nivel nacional
+                            como internacional. Su historia, sus colores y el apoyo de sus hinchas
+                            forman parte de una identidad que se mantiene a través de las generaciones.
+                        </p>
+                    </div>
+
+                    <div class="col-12 col-lg-5">
+                        <img src="{{ url_for('static', filename='imagenes/blog2.png') }}" alt="Historia de Colo-Colo" class="img-fluid detail-blog-img w-100">
+                    </div>
+
+                    <div class="col-12">
+                        <a href="{{ url_for('blogs') }}" class="btn btn-danger fw-bold">VOLVER A BLOGS</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+{% endblock %}

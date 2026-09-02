@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}nosotros{% endblock %}
+
+{% block contenido %}
+<main>
+        <section class="nosotros text-white py-5">
+            <div class="container text-center">
+                <div class="section1">
+                    <h1 class="mb-4">
+                        <span class="span1 d-block">SOBRE</span>
+                        <span class="span2 d-block">NOSOTROS</span>
+                    </h1>
+
+                    <p class="nosotros-texto mx-auto">
+                        Somos una tienda online dedicada a los
+                        hinchas de Colo-Colo, donde buscamos
+                        ofrecer camisetas y productos relacionados
+                        con el club. Nuestro objetivo es entregar una
+                        experiencia de compra sencilla, rápida y
+                        accesible, permitiendo que los fanáticos
+                        puedan encontrar productos que
+                        representen su pasión por el equipo.
+
+                        Nuestra tienda fue desarrollada como parte
+                        de un proyecto académico, aplicando conocimientos
+                        de HTML, CSS y JavaScript para crear una plataforma
+                        web funcional y atractiva.
+                    </p>
+                </div>
+
+                <div class="desarrolladores mt-5">
+                    <h2 class="mb-3">Nuestros Desarrolladores</h2>
+                    <p>Somos un equipo apasionado por la tecnología y por Colo-Colo.</p>
+
+                    <div class="row justify-content-center g-4 mt-2">
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <article class="developer-card h-100 p-4 rounded">
+                                <img src="{{ url_for('static', filename='imagenes/mari.jpeg') }}" alt="Desarrollador 1" class="developer-img rounded-circle mb-3">
+                                <h3 class="h5">Magdiel Reynoso</h3>
+                                <p class="mb-0">Desarrollador Frontend</p>
+                            </article>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <article class="developer-card h-100 p-4 rounded">
+                                <img src="{{ url_for('static', filename='imagenes/seba.png') }}" alt="Desarrollador 2" class="developer-img rounded-circle mb-3">
+                                <h3 class="h5">Sebastian De la Fuente</h3>
+                                <p class="mb-0">Desarrollador Backend</p>
+                            </article>
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <article class="developer-card h-100 p-4 rounded">
+                                <img src="{{ url_for('static', filename='imagenes/Lukas.png') }}" alt="Desarrollador 3" class="developer-img rounded-circle mb-3">
+                                <h3 class="h5">Lukas Riquelme</h3>
+                                <p class="mb-0">Desarrollador</p>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

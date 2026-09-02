@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Tienda Colo-Colo{% endblock %}
+
+{% block contenido %}
+<main>
+        <nav class="usuario-nav bg-dark d-flex justify-content-end gap-3 py-2 px-3">
+            <a href="{{ url_for('login') }}" class="text-white text-decoration-none">👤 Iniciar Sesión</a>
+            <a href="{{ url_for('registro') }}" class="text-white text-decoration-none">Registrarse</a>
+        </nav>
+
+        <section class="info-tienda bg-dark text-white py-4">
+            <div class="container-fluid px-4 px-lg-5">
+                <div class="row align-items-center g-4">
+                    <div class="col-12 col-lg-6">
+                        <h2 class="titulo mb-3">
+                            <span class="co d-block">COLECCION CON EXCESO DE</span>
+                            <span class="aura d-block">AURA</span>
+                        </h2>
+
+                        <p class="descripcion fs-5 mb-0">
+                            Encuentra aquí los mejores productos del club más grande de Chile.
+                        </p>
+                    </div>
+
+                    <div class="col-12 col-lg-6 text-center text-lg-end">
+                        <img src="{{ url_for('static', filename='imagenes/inicio.png') }}" alt="Imagen de la tienda Colo-Colo" class="img-fluid hero-img">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="productos container-fluid py-4 px-3">
+            <h2 class="text-center mb-4">NUEVOS EN LA TIENDA</h2>
+
+            <div class="row g-3">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <article class="card product-card h-100">
+                        <img src="{{ url_for('static', filename='imagenes/gorra2.webp') }}" alt="Gorra2 Oficial Colo-Colo" class="card-img-top">
+                        <div class="card-body py-2">
+                            <h3 class="card-title product-name">Jockey Colo-Colo rosado</h3>
+                            <p class="card-text product-price">$29.990</p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <article class="card product-card h-100">
+                        <img src="{{ url_for('static', filename='imagenes/polera.webp') }}" alt="Polera Oficial 2026" class="card-img-top">
+                        <div class="card-body py-2">
+                            <h3 class="card-title product-name">Polera negra Aura Ojos OVERSIZE</h3>
+                            <p class="card-text product-price">$24.990</p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <article class="card product-card h-100">
+                        <img src="{{ url_for('static', filename='imagenes/pantalon.webp') }}" alt="Pantalon ADN FW2026" class="card-img-top">
+                        <div class="card-body py-2">
+                            <h3 class="card-title product-name">Pantalon ADN FW2026</h3>
+                            <p class="card-text product-price">$49.990</p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <article class="card product-card h-100">
+                        <img src="{{ url_for('static', filename='imagenes/gorra1.webp') }}" alt="Gorra1 Oficial Colo-Colo" class="card-img-top">
+                        <div class="card-body py-2">
+                            <h3 class="card-title product-name">Jockey Colo-Colo Oficial Crosstown TT 47 Captain</h3>
+                            <p class="card-text product-price">$49.990</p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <article class="card product-card h-100">
+                        <img src="{{ url_for('static', filename='imagenes/polera-blanca.webp') }}" alt="Polera Blanca Oficial Colo-Colo" class="card-img-top">
+                        <div class="card-body py-2">
+                            <h3 class="card-title product-name">Polera blanca POST AURA OVERSIZE</h3>
+                            <p class="card-text product-price">$24.990</p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <article class="card product-card h-100">
+                        <img src="{{ url_for('static', filename='imagenes/camiseta.webp') }}" alt="Camiseta" class="card-img-top">
+                        <div class="card-body py-2">
+                            <h3 class="card-title product-name">Camiseta manga larga orininals FW2026</h3>
+                            <p class="card-text product-price">$79.990</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}
