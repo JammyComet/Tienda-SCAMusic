@@ -28,14 +28,18 @@ function validarLogin() {
         return false;
     }
 
-    const usuarioEncontrado = usuarios.find(
-        usuario => usuario.correo === email && usuario.contrasena === contrasena
-    );
+    const usuarioEncontrado =
+    buscarUsuario(email, contrasena);
 
     if (usuarioEncontrado === undefined) {
         alert("Correo o contraseña incorrectos");
         return false;
     }
+
+    guardarSesion({
+        correo: usuarioEncontrado.correo,
+        rol: usuarioEncontrado.rol
+    });
 
     alert("Inicio de sesión exitoso");
     return true;

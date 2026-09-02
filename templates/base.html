@@ -37,6 +37,12 @@
         </div>
     </header>
 
+    <script
+        src="{{ url_for('static', filename='js/storage.js') }}"
+        defer>
+    </script>
+
+
     {% block contenido %}{% endblock %}
 
     {% block scripts %}{% endblock %}

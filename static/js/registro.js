@@ -128,6 +128,27 @@ function validarRegistro() {
         return false;
     }
 
+    if (existeCorreo(email)) {
+        alert("Ya existe un usuario registrado con este correo");
+        return false;
+    }
+
+    const nuevoUsuario = {
+        run: rut,
+        nombre: nombre,
+        apellidos: apellido,
+        correo: email,
+        fechaNacimiento: fechaNacimiento,
+        contrasena: password,
+        telefono: telefono,
+        region: region,
+        comuna: comuna,
+        direccion: direccion,
+        rol: "Cliente"
+    };
+
+    registrarUsuario(nuevoUsuario);
+
     alert("Registro realizado correctamente");
     return true;
 }

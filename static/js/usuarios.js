@@ -1,6 +1,38 @@
-// Usuarios temporales utilizados por el inicio de sesión.
-const usuarios = [
-    { correo: "admin@duoc.cl", contrasena: "1234", rol: "Administrador" },
-    { correo: "cliente@gmail.com", contrasena: "12345", rol: "Cliente" },
-    { correo: "vendedor@duoc.cl", contrasena: "123456", rol: "Vendedor" }
-];
+function obtenerUsuarios() {
+    return obtenerColeccion(COLO_KEYS.usuarios);
+}
+
+
+function buscarUsuario(correo, contrasena) {
+
+    const usuarios = obtenerUsuarios();
+
+    return usuarios.find(
+        usuario =>
+            usuario.correo === correo &&
+            usuario.contrasena === contrasena
+    );
+}
+
+
+function existeCorreo(correo) {
+
+    const usuarios = obtenerUsuarios();
+
+    return usuarios.some(
+        usuario => usuario.correo === correo
+    );
+}
+
+
+function registrarUsuario(usuario) {
+
+    const usuarios = obtenerUsuarios();
+
+    usuarios.push(usuario);
+
+    guardarColeccion(
+        COLO_KEYS.usuarios,
+        usuarios
+    );
+}
