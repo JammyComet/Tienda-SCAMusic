@@ -1,67 +1,51 @@
 {% extends "base.html" %}
 
-{% block title %}
-Productos
-{% endblock %}
+{% block title %}Productos{% endblock %}
 
 
 {% block contenido %}
+    <main class="container py-5">
+        <h1 class="text-center mb-4">
+            Discos
+        </h1>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <input
+                    type="text"
+                    id="buscarProducto"
+                    class="form-control"
+                    placeholder="Buscar disco o artista"
+                >
+            </div>
+            <div class="col-md-6">
+                <select
+                    id="filtroCategoria"
+                    class="form-select"
+                >
 
-<main class="container py-5">
-
-    <h1 class="text-center mb-4">
-        Discos
-    </h1>
-
-
-    <div class="row mb-4">
-
-        <div class="col-md-6">
-
-            <input
-                type="text"
-                id="buscarProducto"
-                class="form-control"
-                placeholder="Buscar disco o artista"
-            >
-
+                    <option value="">
+                        Todos los géneros
+                    </option>
+                </select>
+            </div>
         </div>
 
-
-        <div class="col-md-6">
-
-            <select
-                id="filtroCategoria"
-                class="form-select"
-            >
-
-                <option value="">
-                    Todos los géneros
-                </option>
-
-            </select>
-
+        <div
+            id="contenedorProductos"
+            class="row g-4"
+        >
         </div>
 
-    </div>
-
-
-    <div
-        id="contenedorProductos"
-        class="row g-4"
-    >
-    </div>
-
-</main>
+    </main>
 
 {% endblock %}
 
 
 {% block scripts %}
 
-<script
-    src="{{ url_for('static', filename='js/productos.js') }}"
-    defer>
-</script>
+    <script
+        src="{{ url_for('static', filename='js/productos.js') }}"
+        defer>
+    </script>
 
 {% endblock %}

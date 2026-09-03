@@ -1,11 +1,7 @@
-/*PRODUC*/
 
 function obtenerProductos() {
     return obtenerColeccion(COLO_KEYS.productos);
 }
-
-
-/*PROD COD*/
 
 function obtenerProductoPorCodigo(codigo) {
 
@@ -16,7 +12,6 @@ function obtenerProductoPorCodigo(codigo) {
     );
 }
 
-/*NOMBRE CATEGORIA*/
 
 function obtenerNombreCategoria(categoriaId) {
 
@@ -35,7 +30,7 @@ function obtenerNombreCategoria(categoriaId) {
 }
 
 
-/*FORMATO PRECIO*/
+
 
 function formatearPrecio(precio) {
 
@@ -49,7 +44,7 @@ function formatearPrecio(precio) {
 }
 
 
-/*CREAR TARJETAS*/
+
 
 function crearTarjetaProducto(producto) {
 
@@ -108,8 +103,6 @@ function crearTarjetaProducto(producto) {
 }
 
 
-/*MOSTRAR PRODUCTOS*/
-
 function mostrarProductos(productos) {
 
     const contenedor =
@@ -153,8 +146,6 @@ function mostrarProductos(productos) {
 }
 
 
-/*CARGAR CATE*/
-
 function cargarCategorias() {
 
     const select =
@@ -180,9 +171,6 @@ function cargarCategorias() {
         }
     );
 }
-
-
-/*FILTRAR*/
 
 function filtrarProductos() {
 
@@ -247,7 +235,21 @@ document.addEventListener(
     "DOMContentLoaded",
     function () {
 
+        const contenedorProductos =
+            document.getElementById(
+                "contenedorProductos"
+            );
+
+
+        // Si no estamos en la página de productos,
+        // no inicializamos el catálogo.
+        if (!contenedorProductos) {
+            return;
+        }
+
+
         cargarCategorias();
+
 
         mostrarProductos(
             obtenerProductos()

@@ -3,7 +3,7 @@
 {% block title %}registro{% endblock %}
 
 {% block contenido %}
-<main>
+    <main>
         <form class="form-contenedor border p-4 mx-auto my-4">
             <h2 class="text-center fw-bold mb-4">Registro de Usuario</h2>
 
@@ -72,13 +72,13 @@
 {% endblock %}
 
 {% block scripts %}
-<script
-    src="{{ url_for('static', filename='js/usuarios.js') }}"
-    defer>
-</script>
+    <script
+        src="{{ url_for('static', filename='js/usuarios.js') }}"
+        defer>
+    </script>
 
-<script
-    src="{{ url_for('static', filename='js/registro.js') }}"
-    defer>
-</script>
+    <script
+        src="{{ url_for('static', filename='js/registro.js') }}"
+        defer>
+    </script>
 {% endblock %}
