@@ -42,6 +42,10 @@ def detalle_blog1():
 def detalle_blog2():
     return render_template("detalle-blog2.html")
 
+@app.route("/productos")
+def productos():
+    return render_template("productos.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)
