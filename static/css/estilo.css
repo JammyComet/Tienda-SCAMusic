@@ -19,14 +19,18 @@ body {
     line-height: 1;
 }
 
-.colo,
+.text-center{
+    color:#6b5162;
+}
+
+.texto,
 .tienda,
-.oficial {
+.virtual {
     display: block;
     font-weight: 900;
 }
 
-.colo {
+.texto {
     color: black;
     font-size: 16px;
     letter-spacing: 3px;
@@ -34,13 +38,13 @@ body {
 }
 
 .tienda {
-    color: red;
+    color: rgb(198, 66, 202);
     font-size: 30px;
     letter-spacing: 5px;
 }
 
-.oficial {
-    color: black;
+.virtual {
+    color: rgb(214, 12, 204);
     font-size: 10px;
     letter-spacing: 14px;
 }
@@ -51,14 +55,14 @@ body {
 }
 
 .co {
-    color: white;
+    color: rgb(53, 170, 121);
     font-size: 16px;
     font-weight: 900;
     letter-spacing: 3px;
 }
 
-.aura {
-    color: red;
+.musica-grande {
+    color: rgb(230, 165, 226);
     font-size: clamp(55px, 9vw, 100px);
     font-weight: 900;
     letter-spacing: clamp(15px, 5vw, 60px);
@@ -70,7 +74,7 @@ body {
 }
 
 .product-card {
-    background-color: #e5e5e5;
+    background-color: 	#6b5162;
     border: 0;
     border-radius: 0;
 }
@@ -86,12 +90,14 @@ body {
     font-size: 13px;
     font-weight: normal;
     text-align: center;
+    color:rgb(237, 243, 240);
 }
 
 .product-price {
     font-size: 12px;
     text-align: right;
     margin-bottom: 0;
+    color:rgb(65, 216, 153);
 }
 
 
@@ -102,6 +108,7 @@ body {
     gap: 20px;
     font-size: 30px;
 }
+
 
 .titulo-lineas::before,
 .titulo-lineas::after {
@@ -129,7 +136,7 @@ body {
 }
 
 .titulo2 span {
-    color: red;
+    color: rgb(230, 165, 226);
     font-size: 35px;
     margin-top: 5px;
 }
@@ -143,11 +150,20 @@ body {
 
 .nosotros {
     min-height: 100vh;
-    background-image: url("../imagenes/fondo.png");
+    background-image: url("../imagenes/fondo.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
+
+.h5{
+    color:rgb(233, 238, 236);
+}
+
+.mb-0{
+    color: #D2C1B6;
+}
+
 
 .span1 {
     font-family: Georgia, serif;
@@ -241,6 +257,8 @@ body {
         font-size: 45px;
     }
 }
+
+
 
 
 .blogs .btn-danger,

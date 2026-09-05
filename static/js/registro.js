@@ -21,7 +21,7 @@ if (regionSelect && comunaSelect) {
         regionSelect.appendChild(opcion);
     }
 
-    regionSelect.addEventListener("change", function() {
+    regionSelect.addEventListener("change", function () {
         comunaSelect.innerHTML = '<option value="">Seleccione la comuna</option>';
 
         const regionSeleccionada = regionSelect.value;
@@ -36,119 +36,146 @@ if (regionSelect && comunaSelect) {
     });
 }
 
-// Validación del formulario de registro.
 function validarRegistro() {
-    const rut = document.getElementById("runR").value.trim();
-    const nombre = document.getElementById("nombreR").value.trim();
-    const apellido = document.getElementById("apellidosR").value.trim();
-    const email = document.getElementById("emailR").value.trim();
-    const fechaNacimiento = document.getElementById("Fecha_nacimientoR").value.trim();
-    const password = document.getElementById("contrasenaR").value.trim();
-    const confirmPassword = document.getElementById("confirmar_contrasenaR").value.trim();
-    const telefono = document.getElementById("telefonoR").value.trim();
-    const region = document.getElementById("regionR").value.trim();
-    const comuna = document.getElementById("comunaR").value.trim();
-    const direccion = document.getElementById("direccionR").value.trim();
+    const run = document.getElementById("runR");
+    const nombre = document.getElementById("nombreR");
+    const apellidos = document.getElementById("apellidosR");
+    const email = document.getElementById("emailR");
+    const fechaNacimiento = document.getElementById("Fecha_nacimientoR");
+    const contrasena = document.getElementById("contrasenaR");
+    const confirmarContrasena = document.getElementById("confirmar_contrasenaR");
+    const telefono = document.getElementById("telefonoR");
+    const region = document.getElementById("regionR");
+    const comuna = document.getElementById("comunaR");
+    const direccion = document.getElementById("direccionR");
 
-    if (rut === "" || nombre === "" || apellido === "" || email === "" ||
-        password === "" || confirmPassword === "" || region === "" ||
-        comuna === "" || direccion === "") {
+    let esValido = true;
 
-        if (rut === "") {
-            alert("El campo RUN no puede estar vacío");
-        } else if (nombre === "") {
-            alert("El campo nombre no puede estar vacío");
-        } else if (apellido === "") {
-            alert("El campo apellidos no puede estar vacío");
-        } else if (email === "") {
-            alert("El campo correo no puede estar vacío");
-        } else if (password === "") {
-            alert("El campo contraseña no puede estar vacío");
-        } else if (confirmPassword === "") {
-            alert("Debe confirmar la contraseña");
-        } else if (region === "") {
-            alert("Debe seleccionar una región");
-        } else if (comuna === "") {
-            alert("Debe seleccionar una comuna");
-        } else if (direccion === "") {
-            alert("El campo dirección no puede estar vacío");
-        }
+    if (validarRut(run.value)) {
+        marcarValido(run);
+    } else {
+        marcarInvalido(run);
+        esValido = false;
+    }
+
+    if (validarNombre(nombre.value, 50)) {
+        marcarValido(nombre);
+    } else {
+        marcarInvalido(nombre);
+        esValido = false;
+    }
+
+    if (validarNombre(apellidos.value, 100)) {
+        marcarValido(apellidos);
+    } else {
+        marcarInvalido(apellidos);
+        esValido = false;
+    }
+
+    if (validarCorreo(email.value)) {
+        marcarValido(email);
+    } else {
+        marcarInvalido(email);
+        esValido = false;
+    }
+
+    if (validarPassword(contrasena.value)) {
+        marcarValido(contrasena);
+    } else {
+        marcarInvalido(contrasena);
+        esValido = false;
+    }
+
+    if (
+        validarPassword(confirmarContrasena.value) &&
+        confirmarContrasena.value === contrasena.value
+    ) {
+        marcarValido(confirmarContrasena);
+    } else {
+        marcarInvalido(confirmarContrasena);
+        esValido = false;
+    }
+
+    if (validarTelefono(telefono.value)) {
+        marcarValido(telefono);
+    } else {
+        marcarInvalido(telefono);
+        esValido = false;
+    }
+
+    if (region.value !== "") {
+        marcarValido(region);
+    } else {
+        marcarInvalido(region);
+        esValido = false;
+    }
+
+    if (comuna.value !== "") {
+        marcarValido(comuna);
+    } else {
+        marcarInvalido(comuna);
+        esValido = false;
+    }
+
+    if (textoRequerido(direccion.value, 300)) {
+        marcarValido(direccion);
+    } else {
+        marcarInvalido(direccion);
+        esValido = false;
+    }
+
+    if (!esValido) {
+        alert("Revisa el formulario. Existen campos obligatorios o inválidos.");
         return false;
     }
 
-    if (rut.length < 7 || rut.length > 9) {
-        alert("El RUN debe tener entre 7 y 9 caracteres");
-        return false;
-    }
+    const correoNormalizado = email.value.trim().toLowerCase();
 
-    if (rut.includes(".") || rut.includes("-")) {
-        alert("El RUN no debe contener puntos ni guion");
-        return false;
-    }
-
-    if (nombre.length > 50) {
-        alert("El nombre no puede tener más de 50 caracteres");
-        return false;
-    }
-
-    if (apellido.length > 100) {
-        alert("Los apellidos no pueden tener más de 100 caracteres");
-        return false;
-    }
-
-    if (!email.endsWith("@duoc.cl") &&
-        !email.endsWith("@profesor.duoc.cl") &&
-        !email.endsWith("@gmail.com")) {
-        alert("El correo debe ser @duoc.cl, @profesor.duoc.cl o @gmail.com");
-        return false;
-    }
-
-    if (email.length > 100) {
-        alert("El correo no puede tener más de 100 caracteres");
-        return false;
-    }
-
-    if (password.length < 4 || password.length > 10) {
-        alert("La contraseña debe tener entre 4 y 10 caracteres");
-        return false;
-    }
-
-    if (confirmPassword.length < 4 || confirmPassword.length > 10) {
-        alert("La confirmación de contraseña debe tener entre 4 y 10 caracteres");
-        return false;
-    }
-
-    if (confirmPassword !== password) {
-        alert("Las contraseñas no coinciden");
-        return false;
-    }
-
-    if (direccion.length > 300) {
-        alert("La dirección no puede tener más de 300 caracteres");
-        return false;
-    }
-
-    if (existeCorreo(email)) {
+    if (existeCorreo(correoNormalizado)) {
+        marcarInvalido(email);
         alert("Ya existe un usuario registrado con este correo");
         return false;
     }
 
     const nuevoUsuario = {
-        run: rut,
-        nombre: nombre,
-        apellidos: apellido,
-        correo: email,
-        fechaNacimiento: fechaNacimiento,
-        contrasena: password,
-        telefono: telefono,
-        region: region,
-        comuna: comuna,
-        direccion: direccion,
+        run: run.value.toUpperCase().trim(),
+        nombre: nombre.value.trim(),
+        apellidos: apellidos.value.trim(),
+        correo: correoNormalizado,
+        fechaNacimiento: fechaNacimiento.value,
+        contrasena: contrasena.value,
+        telefono: telefono.value.trim(),
+        region: region.value,
+        comuna: comuna.value,
+        direccion: direccion.value.trim(),
         rol: "Cliente"
     };
 
     registrarUsuario(nuevoUsuario);
 
     alert("Registro realizado correctamente");
+
+    const formulario = run.closest("form");
+    if (formulario) {
+        formulario.reset();
+    }
+
+    comuna.innerHTML = '<option value="">Seleccione la comuna</option>';
+
+    [
+        run,
+        nombre,
+        apellidos,
+        email,
+        contrasena,
+        confirmarContrasena,
+        telefono,
+        region,
+        comuna,
+        direccion
+    ].forEach(function (campo) {
+        campo.classList.remove("is-valid", "is-invalid");
+    });
+
     return true;
 }

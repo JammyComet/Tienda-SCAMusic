@@ -7,7 +7,6 @@ app = Flask(__name__)
 def inicio():
     return render_template("index.html")
 
-
 @app.route("/blogs")
 def blogs():
     return render_template("blogs.html")

@@ -1,37 +1,38 @@
 function validarLogin() {
-    const email = document.getElementById("usuarioL").value.trim();
-    const contrasena = document.getElementById("contrasenaL").value.trim();
+    const email = document.getElementById("usuarioL");
+    const contrasena = document.getElementById("contrasenaL");
 
-    if (email === "" || contrasena === "") {
-        if (email === "") {
-            alert("El campo correo no puede estar vacío");
-        } else if (contrasena === "") {
-            alert("El campo contraseña no puede estar vacío");
-        }
+    let esValido = true;
+
+    if (validarCorreo(email.value)) {
+        marcarValido(email);
+    } else {
+        marcarInvalido(email);
+        esValido = false;
+    }
+
+    if (validarPassword(contrasena.value)) {
+        marcarValido(contrasena);
+    } else {
+        marcarInvalido(contrasena);
+        esValido = false;
+    }
+
+    if (!esValido) {
+        alert("El correo o la contraseña no tienen un formato válido.");
         return false;
     }
 
-    if (!email.endsWith("@duoc.cl") &&
-        !email.endsWith("@profesor.duoc.cl") &&
-        !email.endsWith("@gmail.com")) {
-        alert("El correo debe ser @duoc.cl, @profesor.duoc.cl o @gmail.com");
-        return false;
-    }
+    const correoNormalizado = email.value.trim().toLowerCase();
 
-    if (email.length > 100) {
-        alert("El correo no puede tener más de 100 caracteres");
-        return false;
-    }
-
-    if (contrasena.length < 4 || contrasena.length > 10) {
-        alert("La contraseña debe tener entre 4 y 10 caracteres");
-        return false;
-    }
-
-    const usuarioEncontrado =
-    buscarUsuario(email, contrasena);
+    const usuarioEncontrado = buscarUsuario(
+        correoNormalizado,
+        contrasena.value
+    );
 
     if (usuarioEncontrado === undefined) {
+        marcarInvalido(email);
+        marcarInvalido(contrasena);
         alert("Correo o contraseña incorrectos");
         return false;
     }

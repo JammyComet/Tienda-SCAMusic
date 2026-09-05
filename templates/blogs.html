@@ -6,39 +6,34 @@
     <main>
         <section class="blogs py-5">
             <div class="container">
-                <h1 class="text-white text-center fw-bold mb-5">NOTICIAS IMPORTANTES</h1>
+                <h1 class="text-white text-center fw-bold mb-5">TE PODRÍA INTERESAR</h1>
 
                 <div class="d-flex flex-column gap-4">
                     <article class="blog-card row align-items-center g-4 p-4 m-0">
                         <div class="col-12 col-lg-7">
-                            <h2 class="text-white mb-3">La historia de la camiseta alba</h2>
+                            <h2 class="text-white mb-3">ÁLBUMES MÚSICALES</h2>
                             <p class="blog-description mb-4">
-                                La camiseta de Colo-Colo es uno de los símbolos más
-                                reconocidos de la historia del club. Conoce algunos
-                                datos sobre su evolución y la importancia que tiene
-                                para sus hinchas.
+                                Más que música, es un mundo.
                             </p>
-                            <a href="{{ url_for('detalle_blog1') }}" class="btn btn-danger fw-bold">Ver caso</a>
+                            <a href="{{ url_for('detalle_blog1') }}" class="btn btn-danger fw-bold">VER</a>
                         </div>
 
                         <div class="col-12 col-lg-5">
-                            <img src="{{ url_for('static', filename='imagenes/blog1.png') }}" alt="Historia de la camiseta de Colo-Colo" class="img-fluid blog-img w-100">
+                            <img src="{{ url_for('static', filename='imagenes/conceptuales.jpg') }}" alt="Persona escuchando música" class="img-fluid blog-img w-100">
                         </div>
                     </article>
 
                     <article class="blog-card row align-items-center g-4 p-4 m-0">
                         <div class="col-12 col-lg-7">
-                            <h2 class="text-white mb-3">Colo-Colo y su historia en el fútbol chileno</h2>
+                            <h2 class="text-white mb-3">COMO EVOLUCIONAN LOS ARTISTAS Y BANDAS</h2>
                             <p class="blog-description mb-4">
-                                Colo-Colo es uno de los clubes más importantes del
-                                fútbol chileno. Descubre algunos datos interesantes
-                                sobre su historia, sus títulos y la pasión de sus hinchas.
+                                Siempre ocurren casos de diferencias creativas, evoluciones en géneros, cambios, etc.
                             </p>
-                            <a href="{{ url_for('detalle_blog2') }}" class="btn btn-danger fw-bold">Ver caso</a>
+                            <a href="{{ url_for('detalle_blog2') }}" class="btn btn-danger fw-bold">VER</a>
                         </div>
 
                         <div class="col-12 col-lg-5">
-                            <img src="{{ url_for('static', filename='imagenes/blog2.png') }}" alt="Historia de Colo-Colo" class="img-fluid blog-img w-100">
+                            <img src="{{ url_for('static', filename='imagenes/artistas.jpg') }}" alt="Artistas que cambiaron" class="img-fluid blog-img w-100">
                         </div>
                     </article>
                 </div>

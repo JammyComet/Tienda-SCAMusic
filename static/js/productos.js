@@ -93,6 +93,14 @@ function crearTarjetaProducto(producto) {
                     Ver detalle
                 </a>
 
+                <button
+                    type ="button
+                    class= "btn btn-dark"
+                    onclick="agregarAlCarrito(${producto.codigo})
+                >
+                    Añadir al carrito
+                </button>
+
             </div>
 
         </article>
