@@ -4,6 +4,7 @@ const COLO_KEYS = {
     categorias: "colo_categorias",
     carrito: "colo_carrito",
     contactos: "colo_contactos",
+    ordenes: "colo_ordenes",
     sesion: "colo_sesion"
 };
 
@@ -46,10 +47,30 @@ function inicializarDatos() {
                 rol: "Vendedor"
             }
         ]);
+    } else {
+        // Mantiene disponible el usuario vendedor de prueba incluso si el
+        // navegador ya tenía datos de una versión anterior del proyecto.
+        const usuarios = obtenerColeccion(COLO_KEYS.usuarios);
+        const existeVendedor = usuarios.some(
+            usuario => usuario.correo === "vendedor@duoc.cl"
+        );
+
+        if (!existeVendedor) {
+            usuarios.push({
+                correo: "vendedor@duoc.cl",
+                contrasena: "123456",
+                rol: "Vendedor"
+            });
+            guardarColeccion(COLO_KEYS.usuarios, usuarios);
+        }
     }
 
     if (!localStorage.getItem(COLO_KEYS.contactos)) {
         guardarColeccion(COLO_KEYS.contactos, []);
+    }
+
+    if (!localStorage.getItem(COLO_KEYS.ordenes)) {
+        guardarColeccion(COLO_KEYS.ordenes, []);
     }
 
     if (!localStorage.getItem(COLO_KEYS.categorias)) {

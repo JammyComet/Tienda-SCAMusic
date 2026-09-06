@@ -301,3 +301,94 @@ body {
 .admin-body .mb-0 {
     color: inherit;
 }
+
+
+/* Carrusel de discos del inicio */
+.mi-carousel {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.mi-carousel .carousel-item {
+    height: 400px;
+}
+
+.mi-carousel .carousel-item img {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    margin: auto;
+}
+
+/* Carrito */
+.carrito-producto {
+    padding-bottom: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #bcbcbc;
+}
+
+.carrito-producto-img {
+    width: 100%;
+    max-width: 150px;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    background-color: white;
+}
+
+.carrito-cantidad {
+    width: 120px;
+}
+
+.carrito-cantidad .form-control {
+    min-width: 48px;
+}
+
+@media (min-width: 768px) {
+    .sidebar-total {
+        border-left: 2px solid black;
+    }
+}
+
+.btn-pagar {
+    background-color: #6b5162;
+    color: white;
+    width: 100%;
+    border: 2px solid black;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    box-shadow: 2px 2px 0 black;
+}
+
+.btn-pagar:hover:not(:disabled) {
+    background-color: #008f45;
+    color: white;
+    box-shadow: 1px 1px 0 black;
+    transform: translate(1px, 1px);
+}
+
+@media (max-width: 575.98px) {
+    .mi-carousel .carousel-item,
+    .mi-carousel .carousel-item img {
+        height: 300px;
+    }
+}
+
+/* Pago exitoso */
+.pago-exitoso-icono {
+    width: 86px;
+    height: 86px;
+    margin: 0 auto;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background-color: #198754;
+    color: white;
+    font-size: 48px;
+    font-weight: bold;
+}
+
+.pago-exitoso-card {
+    max-width: 560px;
+}

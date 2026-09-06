@@ -16,6 +16,10 @@ function actualizarNavegacionSesion() {
     if (sesion.rol === "Administrador") {
         document.getElementById("enlaceAdmin")?.classList.remove("d-none");
     }
+
+    if (sesion.rol === "Vendedor") {
+        document.getElementById("enlaceVendedor")?.classList.remove("d-none");
+    }
 }
 
 function cerrarSesionDesdeNavegacion() {

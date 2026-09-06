@@ -1,18 +1,8 @@
-document.addEventListener(
-    "DOMContentLoaded",
-    function () {
-        cargarRegionesComunas(
-            "regionR",
-            "comunaR"
-        );
-    }
-);
-
-function validarRegistro() {
+function procesarRegistro() {
     const run = document.getElementById("runR");
     const nombre = document.getElementById("nombreR");
     const apellidos = document.getElementById("apellidosR");
-    const email = document.getElementById("emailR");
+    const correo = document.getElementById("emailR");
     const fechaNacimiento = document.getElementById("Fecha_nacimientoR");
     const contrasena = document.getElementById("contrasenaR");
     const confirmarContrasena = document.getElementById("confirmar_contrasenaR");
@@ -23,37 +13,35 @@ function validarRegistro() {
 
     let esValido = true;
 
-    if (validarRut(run.value)) {
-        marcarValido(run);
-    } else {
+    if (validarRut(run.value)) marcarValido(run);
+    else {
         marcarInvalido(run);
         esValido = false;
     }
 
-    if (validarNombre(nombre.value, 50)) {
-        marcarValido(nombre);
-    } else {
+    if (validarNombre(nombre.value, 50)) marcarValido(nombre);
+    else {
         marcarInvalido(nombre);
         esValido = false;
     }
 
-    if (validarNombre(apellidos.value, 100)) {
-        marcarValido(apellidos);
-    } else {
+    if (validarNombre(apellidos.value, 100)) marcarValido(apellidos);
+    else {
         marcarInvalido(apellidos);
         esValido = false;
     }
 
-    if (validarCorreo(email.value)) {
-        marcarValido(email);
-    } else {
-        marcarInvalido(email);
+    if (validarCorreo(correo.value)) marcarValido(correo);
+    else {
+        marcarInvalido(correo);
         esValido = false;
     }
 
-    if (validarPassword(contrasena.value)) {
-        marcarValido(contrasena);
-    } else {
+    if (fechaNacimiento.value !== "") marcarValido(fechaNacimiento);
+    else fechaNacimiento.classList.remove("is-valid", "is-invalid");
+
+    if (validarPassword(contrasena.value)) marcarValido(contrasena);
+    else {
         marcarInvalido(contrasena);
         esValido = false;
     }
@@ -68,48 +56,52 @@ function validarRegistro() {
         esValido = false;
     }
 
-    if (validarTelefono(telefono.value)) {
-        marcarValido(telefono);
-    } else {
+    if (validarTelefono(telefono.value)) marcarValido(telefono);
+    else {
         marcarInvalido(telefono);
         esValido = false;
     }
 
-    if (region.value !== "") {
-        marcarValido(region);
-    } else {
+    if (region.value !== "") marcarValido(region);
+    else {
         marcarInvalido(region);
         esValido = false;
     }
 
-    if (comuna.value !== "") {
-        marcarValido(comuna);
-    } else {
+    if (comuna.value !== "") marcarValido(comuna);
+    else {
         marcarInvalido(comuna);
         esValido = false;
     }
 
-    if (textoRequerido(direccion.value, 300)) {
-        marcarValido(direccion);
-    } else {
+    if (textoRequerido(direccion.value, 300)) marcarValido(direccion);
+    else {
         marcarInvalido(direccion);
         esValido = false;
     }
 
     if (!esValido) {
-        alert("Revisa el formulario. Existen campos obligatorios o inválidos.");
-        return false;
+        Swal.fire(
+            "Revisa el formulario",
+            "Existen campos obligatorios o inválidos.",
+            "error"
+        );
+        return;
     }
 
-    const correoNormalizado = email.value.trim().toLowerCase();
+    const correoNormalizado = correo.value.trim().toLowerCase();
 
     if (existeCorreo(correoNormalizado)) {
-        marcarInvalido(email);
-        alert("Ya existe un usuario registrado con este correo");
-        return false;
+        marcarInvalido(correo);
+        Swal.fire(
+            "Correo registrado",
+            "Este correo ya está registrado.",
+            "error"
+        );
+        return;
     }
 
-    const nuevoUsuario = {
+    const usuario = {
         run: run.value.toUpperCase().trim(),
         nombre: nombre.value.trim(),
         apellidos: apellidos.value.trim(),
@@ -123,22 +115,23 @@ function validarRegistro() {
         rol: "Cliente"
     };
 
-    registrarUsuario(nuevoUsuario);
+    registrarUsuario(usuario);
 
-    alert("Registro realizado correctamente");
+    Swal.fire(
+        "Registro exitoso",
+        "El usuario fue registrado correctamente.",
+        "success"
+    );
 
-    const formulario = run.closest("form");
-    if (formulario) {
-        formulario.reset();
-    }
-
+    document.getElementById("formularioRegistro").reset();
     comuna.innerHTML = '<option value="">Seleccione la comuna</option>';
 
     [
         run,
         nombre,
         apellidos,
-        email,
+        correo,
+        fechaNacimiento,
         contrasena,
         confirmarContrasena,
         telefono,
@@ -148,6 +141,16 @@ function validarRegistro() {
     ].forEach(function (campo) {
         campo.classList.remove("is-valid", "is-invalid");
     });
-
-    return true;
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    cargarRegionesComunas("regionR", "comunaR");
+
+    const formulario = document.getElementById("formularioRegistro");
+    if (!formulario) return;
+
+    formulario.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+        procesarRegistro();
+    });
+});

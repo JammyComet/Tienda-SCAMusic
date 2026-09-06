@@ -26,26 +26,29 @@
             <h2 class="titulo-lineas fw-bold mb-0">SPAMUSIC</h2>
         </section>
 
-        <form class="form-contenedor border p-4 mx-auto mb-4">
+        <form id="formularioContacto" class="form-contenedor border p-4 mx-auto mb-4" novalidate>
             <h2 class="text-center fw-bold mb-4">Formulario de Contacto</h2>
 
             <div class="mb-3">
                 <label for="nombreC" class="form-label">Nombre Completo:</label>
                 <input type="text" id="nombreC" name="nombreC" maxlength="100" required class="form-control">
+                <div class="invalid-feedback">El nombre es obligatorio y debe tener máximo 100 caracteres.</div>
             </div>
 
             <div class="mb-3">
-                <label for="emailC" class="form-label">Correo:</label>
+                <label for="emailC" class="form-label">Correo (Opcional):</label>
                 <input type="email" id="emailC" name="emailC" maxlength="100" class="form-control">
+                <div class="invalid-feedback">Ingresa un correo válido (@duoc.cl, @profesor.duoc.cl o @gmail.com).</div>
             </div>
 
             <div class="mb-3">
                 <label for="contenidoC" class="form-label">Contenido:</label>
                 <textarea id="contenidoC" name="contenidoC" maxlength="500" required class="form-control textarea-contacto"></textarea>
+                <div class="invalid-feedback">El comentario es obligatorio y debe tener máximo 500 caracteres.</div>
             </div>
 
             <div class="text-center">
-                <button type="button" onclick="validarContacto()" class="btn btn-dark px-4">Enviar Mensaje</button>
+                <button type="submit" class="btn btn-dark px-4">Enviar Mensaje</button>
             </div>
         </form>
     </main>

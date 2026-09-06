@@ -17,6 +17,11 @@ def contacto():
     return render_template("contacto.html")
 
 
+@app.route("/carrito")
+def carrito():
+    return render_template("carrito.html")
+
+
 @app.route("/nosotros")
 def nosotros():
     return render_template("nosotros.html")
@@ -71,6 +76,31 @@ def admin_usuario_form():
     return render_template(
         "admin-usuario-form.html"
     )
+
+
+@app.route("/pago-exitoso")
+def pago_exitoso():
+    return render_template("pago-exitoso.html")
+
+
+@app.route("/vendedor")
+def vendedor():
+    return render_template("vendedor.html")
+
+
+@app.route("/vendedor/productos")
+def vendedor_productos():
+    return render_template("vendedor-productos.html")
+
+
+@app.route("/vendedor/ordenes")
+def vendedor_ordenes():
+    return render_template("vendedor-ordenes.html")
+
+
+@app.route("/vendedor/orden-detalle")
+def vendedor_orden_detalle():
+    return render_template("vendedor-orden-detalle.html")
 
 
 if __name__ == "__main__":

@@ -28,66 +28,70 @@
         <section class="productos container-fluid py-4 px-3">
             <h2 class="text-center mb-4">NUEVOS DISCOS A LA VENTA</h2>
 
-            <div class="row g-3">
-                <div class="col-12 col-md-6 col-lg-4">
-                    <article class="card product-card h-100">
-                        <img src="{{ url_for('static', filename='imagenes/31Minutos.jpg') }}" alt="31 Minutos" class="card-img-top">
-                        <div class="card-body py-2">
-                            <h3 class="card-title product-name">31 Minutos - 31 Minutos</h3>
-                            <p class="card-text product-price">$12.900</p>
-                        </div>
-                    </article>
+            <div id="carouselDiscos"
+                 class="carousel slide mi-carousel"
+                 data-bs-ride="carousel"
+                 data-bs-interval="3000">
+
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img class="d-block w-100"
+                             src="{{ url_for('static', filename='imagenes/31Minutos.jpg') }}"
+                             alt="31 Minutos">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img class="d-block w-100"
+                             src="{{ url_for('static', filename='imagenes/louder.jpg') }}"
+                             alt="Taking Back Sunday - Louder Now">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img class="d-block w-100"
+                             src="{{ url_for('static', filename='imagenes/dangerdays.jpg') }}"
+                             alt="My Chemical Romance - Danger Days">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img class="d-block w-100"
+                             src="{{ url_for('static', filename='imagenes/soda.png') }}"
+                             alt="Soda Stereo">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img class="d-block w-100"
+                             src="{{ url_for('static', filename='imagenes/marco.jpg') }}"
+                             alt="Marco Antonio Solís">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img class="d-block w-100"
+                             src="{{ url_for('static', filename='imagenes/billy.jpeg') }}"
+                             alt="Billy Idol">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img class="d-block w-100"
+                             src="{{ url_for('static', filename='imagenes/michael.jpg') }}"
+                             alt="Michael Jackson">
+                    </div>
                 </div>
 
-                <div class="col-12 col-md-6 col-lg-4">
-                    <article class="card product-card h-100">
-                        <img src="{{ url_for('static', filename='imagenes/louder.jpg') }}" alt="Taking Back Sunday" class="card-img-top">
-                        <div class="card-body py-2">
-                            <h3 class="card-title product-name">Taking Back Sunday - Louder Now (20th Anniversary) </h3>
-                            <p class="card-text product-price">$24.990</p>
-                        </div>
-                    </article>
-                </div>
+                <button class="carousel-control-prev"
+                        type="button"
+                        data-bs-target="#carouselDiscos"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
 
-                <div class="col-12 col-md-6 col-lg-4">
-                    <article class="card product-card h-100">
-                        <img src="{{ url_for('static', filename='imagenes/dangerdays.jpg') }}" alt="My Chemical Romance" class="card-img-top">
-                        <div class="card-body py-2">
-                            <h3 class="card-title product-name"> My Chemical Romance - Danger Days: The True Lives of the Fabulous Killjoys (Deluxe Edition)</h3>
-                            <p class="card-text product-price">$26.990</p>
-                        </div>
-                    </article>
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-4">
-                    <article class="card product-card h-100">
-                        <img src="{{ url_for('static', filename='imagenes/soda.png') }}" alt="Soda Stereo" class="card-img-top">
-                        <div class="card-body py-2">
-                            <h3 class="card-title product-name">Soda Stereo - Cancion Animal </h3>
-                            <p class="card-text product-price">$25.900</p>
-                        </div>
-                    </article>
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-4">
-                    <article class="card product-card h-100">
-                        <img src="{{ url_for('static', filename='imagenes/billy.jpeg') }}" alt="Billy Idol" class="card-img-top">
-                        <div class="card-body py-2">
-                            <h3 class="card-title product-name">Billy Idol - Billy Idol</h3>
-                            <p class="card-text product-price">$34.900</p>
-                        </div>
-                    </article>
-                </div>
-
-                <div class="col-12 col-md-6 col-lg-4">
-                    <article class="card product-card h-100">
-                        <img src="{{ url_for('static', filename='imagenes/marco.jpg') }}" alt="Marco Antonio Solis" class="card-img-top">
-                        <div class="card-body py-2">
-                            <h3 class="card-title product-name">Marco Antonio Solis - Trozos de mi alma</h3>
-                            <p class="card-text product-price">$42.900</p>
-                        </div>
-                    </article>
-                </div>
+                <button class="carousel-control-next"
+                        type="button"
+                        data-bs-target="#carouselDiscos"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
             </div>
         </section>
     </main>

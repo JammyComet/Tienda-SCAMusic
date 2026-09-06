@@ -1,40 +1,67 @@
-function validarContacto() {
-    const nombre = document.getElementById("nombreC").value.trim();
-    const email = document.getElementById("emailC").value.trim();
-    const contenido = document.getElementById("contenidoC").value.trim();
+function procesarContacto() {
+    const nombre = document.getElementById("nombreC");
+    const correo = document.getElementById("emailC");
+    const comentario = document.getElementById("contenidoC");
+    let esValido = true;
 
-    if (nombre === "" || contenido === "") {
-        if (nombre === "") {
-            alert("El campo nombre no puede estar vacío");
-        } else if (contenido === "") {
-            alert("El campo contenido no puede estar vacío");
-        }
-        return false;
+    if (validarNombre(nombre.value, 100)) marcarValido(nombre);
+    else {
+        marcarInvalido(nombre);
+        esValido = false;
     }
 
-    if (nombre.length > 100) {
-        alert("El nombre no puede tener más de 100 caracteres");
-        return false;
+    if (correo.value.trim() === "" || validarCorreo(correo.value)) {
+        marcarValido(correo);
+    } else {
+        marcarInvalido(correo);
+        esValido = false;
     }
 
-    if (email !== "" &&
-        !email.endsWith("@duoc.cl") &&
-        !email.endsWith("@profesor.duoc.cl") &&
-        !email.endsWith("@gmail.com")) {
-        alert("El correo debe ser @duoc.cl, @profesor.duoc.cl o @gmail.com");
-        return false;
+    if (textoRequerido(comentario.value, 500)) marcarValido(comentario);
+    else {
+        marcarInvalido(comentario);
+        esValido = false;
     }
 
-    if (email.length > 100) {
-        alert("El correo no puede tener más de 100 caracteres");
-        return false;
+    if (!esValido) {
+        Swal.fire(
+            "Revisa el formulario",
+            "Existen campos obligatorios o inválidos.",
+            "error"
+        );
+        return;
     }
 
-    if (contenido.length > 500) {
-        alert("El contenido no puede tener más de 500 caracteres");
-        return false;
-    }
+    const mensaje = {
+        nombre: nombre.value.trim(),
+        correo: correo.value.trim().toLowerCase(),
+        comentario: comentario.value.trim(),
+        fecha: new Date().toISOString().slice(0, 10)
+    };
 
-    alert("Mensaje enviado correctamente. ¡Gracias por contactarnos!");
-    return true;
+    const contactos = obtenerColeccion(COLO_KEYS.contactos);
+    contactos.push(mensaje);
+    guardarColeccion(COLO_KEYS.contactos, contactos);
+
+    Swal.fire(
+        "Mensaje enviado",
+        "Gracias por escribirnos, te responderemos pronto.",
+        "success"
+    );
+
+    document.getElementById("formularioContacto").reset();
+
+    [nombre, correo, comentario].forEach(function (campo) {
+        campo.classList.remove("is-valid", "is-invalid");
+    });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const formulario = document.getElementById("formularioContacto");
+    if (!formulario) return;
+
+    formulario.addEventListener("submit", function (evento) {
+        evento.preventDefault();
+        procesarContacto();
+    });
+});

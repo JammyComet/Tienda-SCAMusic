@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Pago exitoso | SCAMusica{% endblock %}
+
+{% block contenido %}
+<main class="container py-5">
+    <section id="detallePagoExitoso" class="text-center py-4"></section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/ordenes.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/pago-exitoso.js') }}" defer></script>
+{% endblock %}
