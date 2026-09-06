@@ -18,7 +18,7 @@
         </p>
 
         <div class="row g-4">
-            <div class="col-12 col-lg-6">
+            <div class="col-12 col-lg-4">
 
                 <article class="card h-100 shadow-sm">
                     <div class="card-body">
@@ -37,7 +37,7 @@
                 </article>
             </div>
 
-            <div class="col-12 col-lg-6">
+            <div class="col-12 col-lg-4">
                 <article class="card h-100 shadow-sm">
                     <div class="card-body">
                         <h3 class="h5 fw-bold">
@@ -50,6 +50,24 @@
                             href="{{ url_for('admin_usuarios') }}"
                             class="btn btn-dark">
                             Administrar usuarios
+                        </a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-12 col-lg-4">
+                <article class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="h5 fw-bold">
+                            Órdenes
+                        </h3>
+                        <p class="text-secondary">
+                            Visualiza todas las compras realizadas y el detalle de cada orden.
+                        </p>
+                        <a
+                            href="{{ url_for('admin_ordenes') }}"
+                            class="btn btn-dark">
+                            Ver órdenes
                         </a>
                     </div>
                 </article>

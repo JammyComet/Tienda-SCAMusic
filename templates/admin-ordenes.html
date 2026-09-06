@@ -1,0 +1,41 @@
+{% extends "admin-base.html" %}
+
+{% block title %}Órdenes | Administrador SCAMusica{% endblock %}
+
+{% block contenido %}
+<section>
+    <div class="mb-4">
+        <p class="text-secondary mb-1">Administración</p>
+        <h2 class="fw-bold">Órdenes</h2>
+        <p class="text-secondary mb-0">
+            Listado de todas las compras registradas desde el carrito de la tienda.
+        </p>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Orden</th>
+                            <th>Fecha</th>
+                            <th>Cliente</th>
+                            <th>Productos</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaOrdenesAdmin"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/ordenes.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/admin-ordenes.js') }}" defer></script>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "admin-base.html" %}
+
+{% block title %}Detalle de orden | Administrador SCAMusica{% endblock %}
+
+{% block contenido %}
+<section>
+    <div id="detalleOrdenAdmin"></div>
+
+    <div class="mt-4">
+        <a href="{{ url_for('admin_ordenes') }}" class="btn btn-outline-dark">
+            Volver a órdenes
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/ordenes.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/admin-orden-detalle.js') }}" defer></script>
+{% endblock %}

@@ -310,7 +310,7 @@ body {
 }
 
 .mi-carousel .carousel-item {
-    height: 400px;
+    min-height: 470px;
 }
 
 .mi-carousel .carousel-item img {
@@ -318,6 +318,22 @@ body {
     height: 400px;
     object-fit: contain;
     margin: auto;
+}
+
+.carousel-producto-info {
+    min-height: 70px;
+    padding: 10px 65px 0;
+    text-align: center;
+}
+
+.carousel-producto-info h3 {
+    margin-bottom: 4px;
+    font-size: 1.05rem;
+}
+
+.carousel-producto-info p {
+    margin-bottom: 0;
+    font-weight: bold;
 }
 
 /* Carrito */
@@ -369,9 +385,17 @@ body {
 }
 
 @media (max-width: 575.98px) {
-    .mi-carousel .carousel-item,
+    .mi-carousel .carousel-item {
+        min-height: 390px;
+    }
+
     .mi-carousel .carousel-item img {
         height: 300px;
+    }
+
+    .carousel-producto-info {
+        min-height: 90px;
+        padding: 10px 45px 0;
     }
 }
 

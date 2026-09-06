@@ -78,6 +78,16 @@ def admin_usuario_form():
     )
 
 
+@app.route("/admin/ordenes")
+def admin_ordenes():
+    return render_template("admin-ordenes.html")
+
+
+@app.route("/admin/orden-detalle")
+def admin_orden_detalle():
+    return render_template("admin-orden-detalle.html")
+
+
 @app.route("/pago-exitoso")
 def pago_exitoso():
     return render_template("pago-exitoso.html")

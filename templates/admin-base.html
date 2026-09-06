@@ -34,6 +34,11 @@
                         class="nav-link admin-nav-link">Usuarios
                     </a>
 
+                    <a
+                        href="{{ url_for('admin_ordenes') }}"
+                        class="nav-link admin-nav-link">Órdenes
+                    </a>
+
                     <hr>
 
                     <a
@@ -63,6 +68,7 @@
     <script src="{{ url_for('static', filename='js/storage.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/admin.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/validaciones.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/validaciones-tiempo-real.js') }}" defer></script>
 
     {% block scripts %}{% endblock %}
 </body>
