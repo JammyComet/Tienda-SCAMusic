@@ -42,6 +42,7 @@ function procesarLogin() {
     }
 
     guardarSesion(usuario);
+    pasarCarritoInvitadoAUsuario(usuario);
 
     const retornoLogin = sessionStorage.getItem("colo_retorno_login");
     sessionStorage.removeItem("colo_retorno_login");

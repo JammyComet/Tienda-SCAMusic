@@ -131,9 +131,6 @@ function inicializarDatos() {
         ]);
     }
 
-    if (!localStorage.getItem(COLO_KEYS.carrito)) {
-        guardarColeccion(COLO_KEYS.carrito, []);
-    }
 }
 
 function obtenerSesion() {

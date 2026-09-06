@@ -1,10 +1,86 @@
+function obtenerClaveCarrito(usuario = obtenerSesion()) {
+    const correo = usuario?.correo?.trim().toLowerCase();
+
+    if (correo) {
+        return `${COLO_KEYS.carrito}_${encodeURIComponent(correo)}`;
+    }
+
+    return `${COLO_KEYS.carrito}_invitado`;
+}
+
 function obtenerCarrito() {
-    return obtenerColeccion(COLO_KEYS.carrito);
+    return obtenerColeccion(obtenerClaveCarrito());
 }
 
 function guardarCarrito(carrito) {
-    guardarColeccion(COLO_KEYS.carrito, carrito);
+    guardarColeccion(obtenerClaveCarrito(), carrito);
     actualizarContadorCarrito();
+}
+
+function fusionarCarritos(carritoBase, carritoNuevo) {
+    const productos = obtenerColeccion(COLO_KEYS.productos);
+    const resultado = carritoBase.map(item => ({ ...item }));
+
+    carritoNuevo.forEach(itemNuevo => {
+        const existente = resultado.find(item => item.codigo === itemNuevo.codigo);
+        const producto = productos.find(item => item.codigo === itemNuevo.codigo);
+        const cantidadNueva = Number(itemNuevo.cantidad || 0);
+
+        if (cantidadNueva <= 0) return;
+
+        if (existente) {
+            const cantidadTotal = Number(existente.cantidad || 0) + cantidadNueva;
+            existente.cantidad = producto
+                ? Math.min(cantidadTotal, Number(producto.stock || 0))
+                : cantidadTotal;
+            return;
+        }
+
+        resultado.push({
+            codigo: itemNuevo.codigo,
+            cantidad: producto
+                ? Math.min(cantidadNueva, Number(producto.stock || 0))
+                : cantidadNueva
+        });
+    });
+
+    return resultado.filter(item => Number(item.cantidad) > 0);
+}
+
+function pasarCarritoInvitadoAUsuario(usuario) {
+    if (!usuario?.correo) return;
+
+    const claveInvitado = obtenerClaveCarrito(null);
+    const claveUsuario = obtenerClaveCarrito(usuario);
+    const carritoInvitado = obtenerColeccion(claveInvitado);
+
+    if (carritoInvitado.length === 0) return;
+
+    const carritoUsuario = obtenerColeccion(claveUsuario);
+    const carritoFusionado = fusionarCarritos(carritoUsuario, carritoInvitado);
+
+    guardarColeccion(claveUsuario, carritoFusionado);
+    localStorage.removeItem(claveInvitado);
+}
+
+function migrarCarritoGlobalAnterior() {
+    const carritoAnteriorGuardado = localStorage.getItem(COLO_KEYS.carrito);
+    if (carritoAnteriorGuardado === null) return;
+
+    let carritoAnterior = [];
+
+    try {
+        carritoAnterior = JSON.parse(carritoAnteriorGuardado) || [];
+    } catch (error) {
+        carritoAnterior = [];
+    }
+
+    const claveActual = obtenerClaveCarrito();
+    const carritoActual = obtenerColeccion(claveActual);
+    const carritoFusionado = fusionarCarritos(carritoActual, carritoAnterior);
+
+    guardarColeccion(claveActual, carritoFusionado);
+    localStorage.removeItem(COLO_KEYS.carrito);
 }
 
 function mostrarMensajeCarrito(titulo, icono = "success") {
@@ -409,6 +485,7 @@ function renderizarCarrito() {
 }
 
 function inicializarCarrito() {
+    migrarCarritoGlobalAnterior();
     actualizarContadorCarrito();
 
     if (!document.getElementById("contenedorCarrito")) return;
