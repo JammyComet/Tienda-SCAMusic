@@ -35,7 +35,48 @@
                     <a href="{{ url_for('contacto') }}" class="text-dark text-decoration-none">Contacto</a>
                 </div>
 
-                <a href="carrito.html" class="text-dark text-decoration-none fw-bold ms-lg-auto">🛒 Carrito</a>
+                <div class="d-flex flex-wrap align-items-center gap-2 ms-lg-auto">
+                    <a
+                        id="enlaceAdmin"
+                        href="{{ url_for('admin') }}"
+                        class="text-dark text-decoration-none fw-bold d-none">
+                        Administración
+                    </a>
+
+                    <span
+                        id="datosSesion"
+                        class="small d-none">
+                        👤 <strong id="nombreSesion"></strong>
+                        · <span id="rolSesion"></span>
+                    </span>
+
+                    <a
+                        id="enlaceLogin"
+                        href="{{ url_for('login') }}"
+                        class="text-dark text-decoration-none">
+                        Iniciar sesión
+                    </a>
+
+                    <a
+                        id="enlaceRegistro"
+                        href="{{ url_for('registro') }}"
+                        class="text-dark text-decoration-none">
+                        Registrarse
+                    </a>
+
+                    <button
+                        type="button"
+                        id="btnCerrarSesion"
+                        class="btn btn-sm btn-outline-dark d-none">
+                        Cerrar sesión
+                    </button>
+
+                    <a
+                        href="carrito.html"
+                        class="text-dark text-decoration-none fw-bold">
+                        🛒 Carrito
+                    </a>
+                </div>
             </nav>
         </div>
     </header>
@@ -43,6 +84,7 @@
         <script src="{{ url_for('static', filename='js/validaciones.js') }}" defer></script>
         <script src="{{ url_for('static', filename='js/storage.js') }}" defer></script>
         <script src="{{ url_for('static', filename='js/carrito.js') }}" defer></script>
+        <script src="{{ url_for('static', filename='js/sesion.js') }}" defer></script>
 
     {% block contenido %}{% endblock %}
 

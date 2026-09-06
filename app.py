@@ -62,6 +62,16 @@ def admin_productos():
 def admin_producto_form():
     return render_template("admin-producto-form.html")
 
+@app.route("/admin/usuarios")
+def admin_usuarios():
+    return render_template("admin-usuarios.html")
+
+@app.route("/admin/usuarios/form")
+def admin_usuario_form():
+    return render_template(
+        "admin-usuario-form.html"
+    )
+
 
 if __name__ == "__main__":
     app.run(debug=True)

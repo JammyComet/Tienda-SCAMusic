@@ -7,22 +7,29 @@ const COLO_KEYS = {
     sesion: "colo_sesion"
 };
 
-
 function obtenerColeccion(clave) {
     return JSON.parse(localStorage.getItem(clave)) || [];
 }
-
 
 function guardarColeccion(clave, datos) {
     localStorage.setItem(clave, JSON.stringify(datos));
 }
 
+function obtenerNombreUsuario(usuario) {
+    const nombreCompleto = [usuario.nombre, usuario.apellidos]
+        .filter(Boolean)
+        .join(" ")
+        .trim();
+
+    if (nombreCompleto) return nombreCompleto;
+
+    const nombreCorreo = usuario.correo.split("@")[0];
+    return nombreCorreo.charAt(0).toUpperCase() + nombreCorreo.slice(1);
+}
 
 function inicializarDatos() {
-
     if (!localStorage.getItem(COLO_KEYS.usuarios)) {
-
-        const usuariosIniciales = [
+        guardarColeccion(COLO_KEYS.usuarios, [
             {
                 correo: "admin@duoc.cl",
                 contrasena: "1234",
@@ -38,58 +45,26 @@ function inicializarDatos() {
                 contrasena: "123456",
                 rol: "Vendedor"
             }
-        ];
-
-        guardarColeccion(
-            COLO_KEYS.usuarios,
-            usuariosIniciales
-        );
+        ]);
     }
-
 
     if (!localStorage.getItem(COLO_KEYS.contactos)) {
         guardarColeccion(COLO_KEYS.contactos, []);
     }
 
     if (!localStorage.getItem(COLO_KEYS.categorias)) {
-
-        const categoriasIniciales = [
-            {
-                id: 1,
-                nombre: "Rock"
-            },
-            {
-                id: 2,
-                nombre: "Pop"
-            },
-            {
-                id: 3,
-                nombre: "Metal"
-            },
-            {
-                id: 4,
-                nombre: "Hip-Hop"
-            },
-            {
-                id: 5,
-                nombre: "Jazz"
-            },
-            {
-                id: 6,
-                nombre: "Electrónica"
-            }
-        ];
-
-        guardarColeccion(
-            COLO_KEYS.categorias,
-            categoriasIniciales
-        );
+        guardarColeccion(COLO_KEYS.categorias, [
+            { id: 1, nombre: "Rock" },
+            { id: 2, nombre: "Pop" },
+            { id: 3, nombre: "Metal" },
+            { id: 4, nombre: "Hip-Hop" },
+            { id: 5, nombre: "Jazz" },
+            { id: 6, nombre: "Electrónica" }
+        ]);
     }
 
     if (!localStorage.getItem(COLO_KEYS.productos)) {
-
-        const productosIniciales = [
-
+        guardarColeccion(COLO_KEYS.productos, [
             {
                 codigo: "DIS-001",
                 nombre: "The Dark Side of the Moon",
@@ -104,7 +79,6 @@ function inicializarDatos() {
                 imagen: "discos/dark-side.jpg",
                 estado: "Activo"
             },
-
             {
                 codigo: "DIS-002",
                 nombre: "Abbey Road",
@@ -119,7 +93,6 @@ function inicializarDatos() {
                 imagen: "discos/abbey-road.jpg",
                 estado: "Activo"
             },
-
             {
                 codigo: "DIS-003",
                 nombre: "Thriller",
@@ -134,49 +107,24 @@ function inicializarDatos() {
                 imagen: "discos/thriller.jpg",
                 estado: "Activo"
             }
-
-
-        ];
-
-        guardarColeccion(
-            COLO_KEYS.productos,
-            productosIniciales
-        );
-
-        
+        ]);
     }
-    
+
     if (!localStorage.getItem(COLO_KEYS.carrito)) {
-        guardarColeccion(
-            COLO_KEYS.carrito,
-            []
-        );
+        guardarColeccion(COLO_KEYS.carrito, []);
     }
-
 }
-
 
 function obtenerSesion() {
-    return JSON.parse(
-        localStorage.getItem(COLO_KEYS.sesion)
-    ) || null;
+    return JSON.parse(localStorage.getItem(COLO_KEYS.sesion)) || null;
 }
-
 
 function guardarSesion(usuario) {
-    localStorage.setItem(
-        COLO_KEYS.sesion,
-        JSON.stringify(usuario)
-    );
+    localStorage.setItem(COLO_KEYS.sesion, JSON.stringify(usuario));
 }
-
 
 function cerrarSesion() {
     localStorage.removeItem(COLO_KEYS.sesion);
 }
 
-
-document.addEventListener(
-    "DOMContentLoaded",
-    inicializarDatos
-);
+document.addEventListener("DOMContentLoaded", inicializarDatos);

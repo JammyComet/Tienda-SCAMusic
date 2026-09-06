@@ -1,147 +1,45 @@
-document.addEventListener("DOMContentLoaded",
-    function () {
-        const parametros =
-            new URLSearchParams(
-                window.location.search
-            );
-
-
-        
-        const codigo =
-            parametros.get("codigo");
-
-
-        
-        if (!codigo) {
-
-            mostrarProductoNoEncontrado();
-
-            return;
-        }
-        const producto =
-            obtenerProductoPorCodigo(codigo);
-        if (!producto) {
-
-            mostrarProductoNoEncontrado();
-
-            return;
-        }
-
-
-        mostrarDetalleProducto(producto);
-
-        const botonAgregar =
-            document.getElementById(
-                "btnAgregarCarrito"
-            );
-
-        if (botonAgregar) {
-            botonAgregar.addEventListener(
-                "click",
-                function () {
-                    agregarAlCarrito(
-                        producto.codigo
-                    );
-                }
-            );
-        }
-    }
-);
-
 function mostrarDetalleProducto(producto) {
+    const imagen = document.getElementById("detalleImagen");
+    imagen.src = `/static/imagenes/${producto.imagen}`;
+    imagen.alt = producto.nombre;
 
-    const imagen =
-        document.getElementById(
-            "detalleImagen"
-        );
+    const datos = {
+        detalleNombre: producto.nombre,
+        detalleArtista: producto.artista,
+        detalleCategoria: obtenerNombreCategoria(producto.categoriaId),
+        detalleFormato: producto.formato,
+        detalleAnio: producto.anio,
+        detalleStock: producto.stock,
+        detallePrecio: formatearPrecio(producto.precio),
+        detalleDescripcion: producto.descripcion
+    };
 
-
-    imagen.src =
-        `/static/imagenes/${producto.imagen}`;
-
-
-    imagen.alt =
-        producto.nombre;
-
-
-    document.getElementById(
-        "detalleNombre"
-    ).textContent =
-        producto.nombre;
-
-
-    document.getElementById(
-        "detalleArtista"
-    ).textContent =
-        producto.artista;
-
-
-    document.getElementById(
-        "detalleCategoria"
-    ).textContent =
-        obtenerNombreCategoria(
-            producto.categoriaId
-        );
-
-
-    document.getElementById(
-        "detalleFormato"
-    ).textContent =
-        producto.formato;
-
-
-    document.getElementById(
-        "detalleAnio"
-    ).textContent =
-        producto.anio;
-
-
-    document.getElementById(
-        "detalleStock"
-    ).textContent =
-        producto.stock;
-
-
-    document.getElementById(
-        "detallePrecio"
-    ).textContent =
-        formatearPrecio(
-            producto.precio
-        );
-
-
-    document.getElementById(
-        "detalleDescripcion"
-    ).textContent =
-        producto.descripcion;
+    Object.entries(datos).forEach(([id, valor]) => {
+        document.getElementById(id).textContent = valor;
+    });
 }
 
 function mostrarProductoNoEncontrado() {
-
-    const contenedor =
-        document.getElementById(
-            "detalleProducto"
-        );
-
-
-    contenedor.innerHTML = `
+    document.getElementById("detalleProducto").innerHTML = `
         <div class="text-center py-5">
-
-            <h1>
-                Producto no encontrado
-            </h1>
-
-            <p class="text-secondary">
-                El disco solicitado no existe.
-            </p>
-
-            <a
-                href="/productos"
-                class="btn btn-dark"
-            >
-                Volver a productos
-            </a>
-
+            <h1>Producto no encontrado</h1>
+            <p class="text-secondary">El disco solicitado no existe.</p>
+            <a href="/productos" class="btn btn-dark">Volver a productos</a>
         </div>
     `;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const codigo = new URLSearchParams(window.location.search).get("codigo");
+    const producto = codigo ? obtenerProductoPorCodigo(codigo) : null;
+
+    if (!producto) {
+        mostrarProductoNoEncontrado();
+        return;
+    }
+
+    mostrarDetalleProducto(producto);
+
+    document.getElementById("btnAgregarCarrito")
+        ?.addEventListener("click", () => agregarAlCarrito(producto.codigo));
+});

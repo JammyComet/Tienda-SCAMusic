@@ -1,0 +1,329 @@
+{% extends "admin-base.html" %}
+
+{% block title %}
+Usuario | Administrador SCAMusica
+{% endblock %}
+
+
+{% block contenido %}
+
+<section>
+
+    <div class="mb-4">
+
+        <p class="text-secondary mb-1">
+            Administración / Usuarios
+        </p>
+
+        <h2
+            id="tituloFormularioUsuario"
+            class="fw-bold">
+
+            Nuevo usuario
+
+        </h2>
+
+    </div>
+
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <form
+                id="formUsuario"
+                novalidate>
+
+                <div class="row g-3">
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="runU"
+                            class="form-label">
+                            RUN
+                        </label>
+
+                        <input
+                            type="text"
+                            id="runU"
+                            class="form-control"
+                            minlength="7"
+                            maxlength="9"
+                            required>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="nombreU"
+                            class="form-label">
+                            Nombre
+                        </label>
+
+                        <input
+                            type="text"
+                            id="nombreU"
+                            class="form-control"
+                            maxlength="50"
+                            required>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="apellidosU"
+                            class="form-label">
+                            Apellidos
+                        </label>
+
+                        <input
+                            type="text"
+                            id="apellidosU"
+                            class="form-control"
+                            maxlength="100"
+                            required>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="correoU"
+                            class="form-label">
+                            Correo
+                        </label>
+
+                        <input
+                            type="email"
+                            id="correoU"
+                            class="form-control"
+                            maxlength="100"
+                            required>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="fechaNacimientoU"
+                            class="form-label">
+                            Fecha de nacimiento
+                        </label>
+
+                        <input
+                            type="date"
+                            id="fechaNacimientoU"
+                            class="form-control">
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="telefonoU"
+                            class="form-label">
+                            Teléfono
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="telefonoU"
+                            class="form-control"
+                            maxlength="15">
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="contrasenaU"
+                            class="form-label">
+                            Contraseña
+                        </label>
+
+                        <input
+                            type="password"
+                            id="contrasenaU"
+                            class="form-control"
+                            minlength="4"
+                            maxlength="10"
+                            required>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="confirmarContrasenaU"
+                            class="form-label">
+                            Confirmar contraseña
+                        </label>
+
+                        <input
+                            type="password"
+                            id="confirmarContrasenaU"
+                            class="form-control"
+                            minlength="4"
+                            maxlength="10"
+                            required>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="rolU"
+                            class="form-label">
+                            Tipo de usuario
+                        </label>
+
+                        <select
+                            id="rolU"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                Seleccione un rol
+                            </option>
+
+                            <option value="Administrador">
+                                Administrador
+                            </option>
+
+                            <option value="Cliente">
+                                Cliente
+                            </option>
+
+                            <option value="Vendedor">
+                                Vendedor
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="regionU"
+                            class="form-label">
+                            Región
+                        </label>
+
+                        <select
+                            id="regionU"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                Seleccione la región
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="comunaU"
+                            class="form-label">
+                            Comuna
+                        </label>
+
+                        <select
+                            id="comunaU"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                Seleccione la comuna
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="direccionU"
+                            class="form-label">
+                            Dirección
+                        </label>
+
+                        <input
+                            type="text"
+                            id="direccionU"
+                            class="form-control"
+                            maxlength="300"
+                            required>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="d-flex gap-2 mt-4">
+
+                    <button
+                        type="submit"
+                        class="btn btn-dark">
+
+                        Guardar usuario
+
+                    </button>
+
+
+                    <a
+                        href="{{ url_for('admin_usuarios') }}"
+                        class="btn btn-outline-secondary">
+
+                        Cancelar
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script
+    src="{{ url_for('static', filename='js/usuarios.js') }}" defer>
+</script>
+
+<script
+    src="{{ url_for('static', filename='js/regiones.js') }}" defer>
+</script>
+
+<script
+    src="{{ url_for('static', filename='js/admin-usuario-form.js') }}" defer>
+</script>
+
+{% endblock %}

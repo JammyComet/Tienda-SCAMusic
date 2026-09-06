@@ -9,12 +9,12 @@
         </p>
 
         <h2 class="display-6 fw-bold mb-2">
-            Hola, Administrador
+            Hola, <span id="adminNombre">Administrador</span>
         </h2>
 
         <p class="mb-4">
-            Sesión iniciada como
-            <strong id="adminCorreo"></strong>
+            <strong id="adminRol">Administrador</strong>
+            · <span id="adminCorreo"></span>
         </p>
 
         <div class="row g-4">
@@ -43,10 +43,14 @@
                         <h3 class="h5 fw-bold">
                             Usuarios
                         </h3>
-
-                        <p class="text-secondary mb-0">
-                            Desde aquí se administrará el listado, creación y edición de usuarios.
+                        <p class="text-secondary">
+                            Administra el listado, creación, edición y eliminación de usuarios.
                         </p>
+                        <a
+                            href="{{ url_for('admin_usuarios') }}"
+                            class="btn btn-dark">
+                            Administrar usuarios
+                        </a>
                     </div>
                 </article>
             </div>

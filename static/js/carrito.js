@@ -2,24 +2,13 @@ function obtenerCarrito() {
     return obtenerColeccion(COLO_KEYS.carrito);
 }
 
-
 function guardarCarrito(carrito) {
-    guardarColeccion(
-        COLO_KEYS.carrito,
-        carrito
-    );
+    guardarColeccion(COLO_KEYS.carrito, carrito);
 }
 
-
 function agregarAlCarrito(codigoProducto) {
-    const productos =
-        obtenerColeccion(COLO_KEYS.productos);
-
-    const producto =
-        productos.find(
-            producto =>
-                producto.codigo === codigoProducto
-        );
+    const producto = obtenerColeccion(COLO_KEYS.productos)
+        .find(item => item.codigo === codigoProducto);
 
     if (!producto) {
         alert("El producto no existe");
@@ -31,94 +20,43 @@ function agregarAlCarrito(codigoProducto) {
         return;
     }
 
-    const carrito =
-        obtenerCarrito();
+    const carrito = obtenerCarrito();
+    const item = carrito.find(item => item.codigo === codigoProducto);
 
-    const productoEnCarrito =
-        carrito.find(
-            item =>
-                item.codigo === codigoProducto
-        );
-
-    if (productoEnCarrito) {
-        if (
-            productoEnCarrito.cantidad >=
-            producto.stock
-        ) {
+    if (item) {
+        if (item.cantidad >= producto.stock) {
             alert("No hay más stock disponible");
             return;
         }
-
-        productoEnCarrito.cantidad++;
+        item.cantidad++;
     } else {
-        carrito.push({
-            codigo: producto.codigo,
-            cantidad: 1
-        });
+        carrito.push({ codigo: producto.codigo, cantidad: 1 });
     }
 
     guardarCarrito(carrito);
     alert("Producto agregado al carrito");
 }
 
-
 function eliminarDelCarrito(codigoProducto) {
-    let carrito =
-        obtenerCarrito();
-
-    carrito =
-        carrito.filter(
-            item =>
-                item.codigo !== codigoProducto
-        );
-
-    guardarCarrito(carrito);
+    guardarCarrito(
+        obtenerCarrito().filter(item => item.codigo !== codigoProducto)
+    );
 }
 
+function cambiarCantidad(codigoProducto, nuevaCantidad) {
+    const carrito = obtenerCarrito();
+    const item = carrito.find(item => item.codigo === codigoProducto);
+    if (!item) return;
 
-function cambiarCantidad(
-    codigoProducto,
-    nuevaCantidad
-) {
-    const carrito =
-        obtenerCarrito();
+    const producto = obtenerColeccion(COLO_KEYS.productos)
+        .find(item => item.codigo === codigoProducto);
+    if (!producto) return;
 
-    const item =
-        carrito.find(
-            item =>
-                item.codigo === codigoProducto
-        );
-
-    if (!item) {
-        return;
-    }
-
-    const productos =
-        obtenerColeccion(
-            COLO_KEYS.productos
-        );
-
-    const producto =
-        productos.find(
-            producto =>
-                producto.codigo === codigoProducto
-        );
-
-    if (!producto) {
-        return;
-    }
-
-    const cantidad =
-        Number(nuevaCantidad);
-
-    if (!Number.isInteger(cantidad)) {
-        return;
-    }
+    const cantidad = Number(nuevaCantidad);
+    if (!Number.isInteger(cantidad)) return;
 
     if (cantidad <= 0) {
-        eliminarDelCarrito(
-            codigoProducto
-        );
+        eliminarDelCarrito(codigoProducto);
         return;
     }
 
@@ -128,47 +66,27 @@ function cambiarCantidad(
     }
 
     item.cantidad = cantidad;
-
     guardarCarrito(carrito);
 }
-
 
 function vaciarCarrito() {
     guardarCarrito([]);
 }
 
-
 function obtenerCantidadCarrito() {
-    const carrito =
-        obtenerCarrito();
-
-    return carrito.reduce(
-        function (total, item) {
-            return total + Number(item.cantidad || 0);
-        },
+    return obtenerCarrito().reduce(
+        (total, item) => total + Number(item.cantidad || 0),
         0
     );
 }
 
-
 function obtenerDetalleCarrito() {
-    const carrito =
-        obtenerCarrito();
+    const productos = obtenerColeccion(COLO_KEYS.productos);
 
-    const productos =
-        obtenerColeccion(COLO_KEYS.productos);
-
-    return carrito
-        .map(function (item) {
-            const producto =
-                productos.find(
-                    producto =>
-                        producto.codigo === item.codigo
-                );
-
-            if (!producto) {
-                return null;
-            }
+    return obtenerCarrito()
+        .map(item => {
+            const producto = productos.find(producto => producto.codigo === item.codigo);
+            if (!producto) return null;
 
             return {
                 ...producto,
@@ -176,7 +94,5 @@ function obtenerDetalleCarrito() {
                 subtotal: producto.precio * item.cantidad
             };
         })
-        .filter(
-            producto => producto !== null
-        );
+        .filter(Boolean);
 }

@@ -1,40 +1,12 @@
-const regiones = [
-    "Región Metropolitana de Santiago",
-    "Región de la Araucanía",
-    "Región de Ñuble"
-];
-
-const comunas = {
-    "Región Metropolitana de Santiago": ["Santiago"],
-    "Región de la Araucanía": ["Temuco"],
-    "Región de Ñuble": ["Chillán"]
-};
-
-const regionSelect = document.getElementById("regionR");
-const comunaSelect = document.getElementById("comunaR");
-
-if (regionSelect && comunaSelect) {
-    for (let i = 0; i < regiones.length; i++) {
-        const opcion = document.createElement("option");
-        opcion.value = regiones[i];
-        opcion.textContent = regiones[i];
-        regionSelect.appendChild(opcion);
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+        cargarRegionesComunas(
+            "regionR",
+            "comunaR"
+        );
     }
-
-    regionSelect.addEventListener("change", function () {
-        comunaSelect.innerHTML = '<option value="">Seleccione la comuna</option>';
-
-        const regionSeleccionada = regionSelect.value;
-        const comunasRegion = comunas[regionSeleccionada] || [];
-
-        for (let i = 0; i < comunasRegion.length; i++) {
-            const opcion = document.createElement("option");
-            opcion.value = comunasRegion[i];
-            opcion.textContent = comunasRegion[i];
-            comunaSelect.appendChild(opcion);
-        }
-    });
-}
+);
 
 function validarRegistro() {
     const run = document.getElementById("runR");

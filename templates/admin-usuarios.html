@@ -1,0 +1,84 @@
+{% extends "admin-base.html" %}
+
+{% block title %}
+Usuarios | Administrador SCAMusica
+{% endblock %}
+
+
+{% block contenido %}
+
+<section>
+
+    <div
+        class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+        <div>
+            <p class="text-secondary mb-1">
+                Administración
+            </p>
+            <h2 class="fw-bold">
+                Usuarios
+            </h2>
+            <p class="text-secondary mb-0">
+                Listado de usuarios registrados.
+            </p>
+        </div>
+        <a
+            href="{{ url_for('admin_usuario_form') }}"
+            class="btn btn-dark">
+
+            Nuevo usuario
+        </a>
+    </div>
+
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+                            <th>RUN</th>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Rol</th>
+                            <th>Acciones</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="tablaUsuarios">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script
+    src="{{ url_for('static', filename='js/usuarios.js') }}"
+    defer>
+</script>
+
+<script
+    src="{{ url_for('static', filename='js/admin-usuarios.js') }}"
+    defer>
+</script>
+
+{% endblock %}
