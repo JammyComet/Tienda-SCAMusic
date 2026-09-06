@@ -43,11 +43,19 @@ function procesarLogin() {
 
     guardarSesion(usuario);
 
+    const retornoLogin = sessionStorage.getItem("colo_retorno_login");
+    sessionStorage.removeItem("colo_retorno_login");
+
     Swal.fire(
         "Inicio de sesión",
         "Los datos son válidos.",
         "success"
     ).then(function () {
+        if (retornoLogin === "/carrito") {
+            window.location.href = "/carrito";
+            return;
+        }
+
         if (usuario.rol === "Administrador") {
             window.location.href = "/admin";
         } else if (usuario.rol === "Vendedor") {

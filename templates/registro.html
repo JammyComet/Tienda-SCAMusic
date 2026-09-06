@@ -9,8 +9,8 @@
 
             <div class="mb-3">
                 <label for="runR" class="form-label">RUN:</label>
-                <input type="text" id="runR" name="runR" minlength="7" maxlength="9" required class="form-control">
-                <div class="invalid-feedback">Ingresa un RUN válido sin puntos ni guion.</div>
+                <input type="text" id="runR" name="runR" minlength="7" maxlength="9" pattern="[0-9]{7,9}" inputmode="numeric" required class="form-control">
+                <div class="invalid-feedback">Ingresa un RUN de 7 a 9 dígitos, sin puntos ni guion.</div>
             </div>
 
             <div class="mb-3">
@@ -49,9 +49,9 @@
             </div>
 
             <div class="mb-3">
-                <label for="telefonoR" class="form-label">Teléfono (Opcional):</label>
-                <input type="tel" id="telefonoR" name="telefonoR" maxlength="15" class="form-control">
-                <div class="invalid-feedback">Ingresa un teléfono chileno válido.</div>
+                <label for="telefonoR" class="form-label">Teléfono:</label>
+                <input type="tel" id="telefonoR" name="telefonoR" minlength="9" maxlength="9" pattern="9[0-9]{8}" inputmode="numeric" required class="form-control">
+                <div class="invalid-feedback">Ingresa 9 dígitos y comienza con 9.</div>
             </div>
 
             <div class="mb-3">

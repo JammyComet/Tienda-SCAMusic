@@ -2,18 +2,71 @@ function eliminarUsuario(correo) {
     const sesion = obtenerSesion();
 
     if (sesion?.correo === correo) {
-        alert("No puedes eliminar el usuario con la sesión activa.");
+        Swal.fire({
+            icon: "error",
+            title: "No permitido",
+            text: "No puedes eliminar tu propio usuario mientras tienes la sesión iniciada.",
+            confirmButtonText: "OK"
+        });
         return;
     }
 
-    if (!confirm("¿Seguro que deseas eliminar este usuario?")) return;
+    Swal.fire({
+        icon: "warning",
+        title: "¿Seguro que deseas eliminar este usuario?",
+        text: "Esta acción no se puede deshacer.",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then(function (resultado) {
+        if (!resultado.isConfirmed) return;
 
-    const usuarios = obtenerUsuarios().filter(
-        usuario => usuario.correo !== correo
-    );
+        const usuarios = obtenerUsuarios().filter(
+            usuario => usuario.correo !== correo
+        );
 
-    guardarColeccion(COLO_KEYS.usuarios, usuarios);
-    mostrarUsuariosAdministrador();
+        guardarColeccion(COLO_KEYS.usuarios, usuarios);
+        mostrarUsuariosAdministrador();
+
+        Swal.fire({
+            icon: "success",
+            title: "Usuario eliminado",
+            text: "El usuario fue eliminado correctamente.",
+            confirmButtonText: "OK"
+        });
+    });
+}
+
+function crearAccionesUsuario(usuario) {
+    const sesion = obtenerSesion();
+    const esSesionActual = sesion?.correo === usuario.correo;
+
+    if (esSesionActual) {
+        return `
+            <span class="badge bg-secondary me-1">Sesión actual</span>
+            <button type="button" class="btn btn-sm btn-dark" disabled>
+                Editar
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-danger" disabled>
+                Eliminar
+            </button>
+        `;
+    }
+
+    return `
+        <a
+            href="/admin/usuarios/form?correo=${encodeURIComponent(usuario.correo)}"
+            class="btn btn-sm btn-dark">
+            Editar
+        </a>
+
+        <button
+            type="button"
+            class="btn btn-sm btn-outline-danger"
+            onclick="eliminarUsuario('${usuario.correo}')">
+            Eliminar
+        </button>
+    `;
 }
 
 function crearFilaUsuario(usuario) {
@@ -26,18 +79,7 @@ function crearFilaUsuario(usuario) {
         <td>${usuario.correo}</td>
         <td>${usuario.rol}</td>
         <td class="text-nowrap">
-            <a
-                href="/admin/usuarios/form?correo=${encodeURIComponent(usuario.correo)}"
-                class="btn btn-sm btn-dark">
-                Editar
-            </a>
-
-            <button
-                type="button"
-                class="btn btn-sm btn-outline-danger"
-                onclick="eliminarUsuario('${usuario.correo}')">
-                Eliminar
-            </button>
+            ${crearAccionesUsuario(usuario)}
         </td>
     `;
 

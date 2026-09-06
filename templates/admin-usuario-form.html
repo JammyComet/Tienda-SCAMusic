@@ -51,6 +51,8 @@ Usuario | Administrador SCAMusica
                             class="form-control"
                             minlength="7"
                             maxlength="9"
+                            pattern="[0-9]{7,9}"
+                            inputmode="numeric"
                             required>
 
                     </div>
@@ -138,7 +140,11 @@ Usuario | Administrador SCAMusica
                             type="tel"
                             id="telefonoU"
                             class="form-control"
-                            maxlength="15">
+                            minlength="9"
+                            maxlength="9"
+                            pattern="9[0-9]{8}"
+                            inputmode="numeric"
+                            required>
 
                     </div>
 

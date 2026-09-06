@@ -22,7 +22,7 @@ function aplicarValidacion(campo, esValido) {
     return esValido;
 }
 
-function procesarFormularioUsuario(correoOriginal) {
+function procesarFormularioUsuario(correoOriginal, runOriginal) {
     const run = document.getElementById("runU");
     const nombre = document.getElementById("nombreU");
     const apellidos = document.getElementById("apellidosU");
@@ -55,20 +55,46 @@ function procesarFormularioUsuario(correoOriginal) {
     ];
 
     if (validaciones.includes(false)) {
-        alert("Revisa los datos del usuario.");
+        Swal.fire({
+            icon: "error",
+            title: "Revisa los datos del usuario",
+            text: "Existen campos obligatorios o inválidos.",
+            confirmButtonText: "OK"
+        });
         return;
     }
 
+    const runNormalizado = run.value.trim();
     const correoNormalizado = correo.value.trim().toLowerCase();
+
+    if (existeRun(runNormalizado, runOriginal)) {
+        marcarInvalido(run);
+
+        Swal.fire({
+            icon: "error",
+            title: "RUN registrado",
+            text: "Ya existe un usuario con ese RUN.",
+            confirmButtonText: "OK"
+        });
+
+        return;
+    }
 
     if (existeCorreo(correoNormalizado, correoOriginal)) {
         marcarInvalido(correo);
-        alert("Ya existe un usuario con ese correo.");
+
+        Swal.fire({
+            icon: "error",
+            title: "Correo registrado",
+            text: "Ya existe un usuario con ese correo.",
+            confirmButtonText: "OK"
+        });
+
         return;
     }
 
     const usuario = {
-        run: run.value.trim().toUpperCase(),
+        run: runNormalizado,
         nombre: nombre.value.trim(),
         apellidos: apellidos.value.trim(),
         correo: correoNormalizado,
@@ -99,13 +125,26 @@ function procesarFormularioUsuario(correoOriginal) {
             }
         }
 
-        alert("Usuario editado correctamente.");
+        Swal.fire({
+            icon: "success",
+            title: "Usuario editado",
+            text: "Usuario editado correctamente.",
+            confirmButtonText: "OK"
+        }).then(function () {
+            window.location.href = destino;
+        });
     } else {
         registrarUsuario(usuario);
-        alert("Usuario creado correctamente.");
-    }
 
-    window.location.href = destino;
+        Swal.fire({
+            icon: "success",
+            title: "Usuario creado",
+            text: "Usuario creado correctamente.",
+            confirmButtonText: "OK"
+        }).then(function () {
+            window.location.href = destino;
+        });
+    }
 }
 
 function inicializarFormularioUsuario() {
@@ -116,11 +155,33 @@ function inicializarFormularioUsuario() {
     let usuario = null;
 
     if (correoOriginal) {
+        const sesion = obtenerSesion();
+
+        if (sesion?.correo === correoOriginal) {
+            Swal.fire({
+                icon: "warning",
+                title: "Acción no permitida",
+                text: "No puedes editar tu propio usuario desde el panel de administración.",
+                confirmButtonText: "OK"
+            }).then(function () {
+                window.location.href = "/admin/usuarios";
+            });
+
+            return;
+        }
+
         usuario = buscarUsuarioPorCorreo(correoOriginal);
 
         if (!usuario) {
-            alert("Usuario no encontrado.");
-            window.location.href = "/admin/usuarios";
+            Swal.fire({
+                icon: "error",
+                title: "Usuario no encontrado",
+                text: "No se encontró el usuario solicitado.",
+                confirmButtonText: "OK"
+            }).then(function () {
+                window.location.href = "/admin/usuarios";
+            });
+
             return;
         }
 
@@ -136,7 +197,7 @@ function inicializarFormularioUsuario() {
 
     formulario.addEventListener("submit", evento => {
         evento.preventDefault();
-        procesarFormularioUsuario(correoOriginal);
+        procesarFormularioUsuario(correoOriginal, usuario?.run || null);
     });
 }
 

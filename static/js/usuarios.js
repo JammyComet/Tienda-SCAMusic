@@ -20,6 +20,18 @@ function existeCorreo(correo, correoIgnorar = null) {
     );
 }
 
+function existeRun(run, runIgnorar = null) {
+    const runNormalizado = String(run || "").trim();
+    const runIgnorarNormalizado = String(runIgnorar || "").trim();
+
+    return obtenerUsuarios().some(usuario => {
+        const runUsuario = String(usuario.run || "").trim();
+
+        return runUsuario === runNormalizado &&
+               runUsuario !== runIgnorarNormalizado;
+    });
+}
+
 function registrarUsuario(usuario) {
     const usuarios = obtenerUsuarios();
     usuarios.push(usuario);

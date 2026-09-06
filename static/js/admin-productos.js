@@ -1,12 +1,28 @@
 function eliminarProducto(codigo) {
-    if (!confirm("¿Seguro que deseas eliminar este producto?")) return;
+    Swal.fire({
+        icon: "warning",
+        title: "¿Seguro que deseas eliminar este producto?",
+        text: "Esta acción no se puede deshacer.",
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then(function (resultado) {
+        if (!resultado.isConfirmed) return;
 
-    const productos = obtenerProductos().filter(
-        producto => producto.codigo !== codigo
-    );
+        const productos = obtenerProductos().filter(
+            producto => producto.codigo !== codigo
+        );
 
-    guardarColeccion(COLO_KEYS.productos, productos);
-    mostrarProductosAdministrador();
+        guardarColeccion(COLO_KEYS.productos, productos);
+        mostrarProductosAdministrador();
+
+        Swal.fire({
+            icon: "success",
+            title: "Producto eliminado",
+            text: "El producto fue eliminado correctamente.",
+            confirmButtonText: "OK"
+        });
+    });
 }
 
 function crearFilaProducto(producto) {

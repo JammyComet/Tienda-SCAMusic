@@ -100,8 +100,7 @@ function iniciarValidacionesRegistroTiempoReal() {
     escucharCampo(
         "telefonoR",
         "input",
-        campo => validarTelefono(campo.value),
-        { opcional: true }
+        campo => validarTelefono(campo.value)
     );
 
     escucharCampo("regionR", "change", campo => campo.value !== "");
@@ -204,7 +203,7 @@ function iniciarValidacionesUsuarioAdminTiempoReal() {
         "runU",
         "input",
         campo => validarRut(campo.value),
-        { mensaje: "Ingresa un RUN válido sin puntos ni guion." }
+        { mensaje: "Ingresa un RUN de 7 a 9 dígitos, sin puntos ni guion." }
     );
 
     escucharCampo(
@@ -240,8 +239,7 @@ function iniciarValidacionesUsuarioAdminTiempoReal() {
         "input",
         campo => validarTelefono(campo.value),
         {
-            opcional: true,
-            mensaje: "Ingresa un teléfono chileno válido."
+            mensaje: "Ingresa 9 dígitos y comienza con 9."
         }
     );
 

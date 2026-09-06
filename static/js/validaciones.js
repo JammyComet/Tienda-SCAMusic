@@ -14,14 +14,20 @@ return devuelve el resultado: true si es válido y false si no.
 */
 function validarCorreo(correo) {
 
-    if (!correo) return false;
+    if (!correo || typeof correo !== "string") return false;
 
-    correo = correo.trim();
+    correo = correo.trim().toLowerCase();
 
     if (correo.length === 0 || correo.length > 100) return false;
 
+    // Comprueba la estructura general del correo: texto@dominio.extensión.
+    // No permite espacios, más de un @ ni un correo sin nombre de usuario.
+    const formatoValido = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i;
+
+    if (!formatoValido.test(correo)) return false;
+
     return formato_correo.some(function (dominio) {
-        return correo.toLowerCase().endsWith(dominio);
+        return correo.endsWith(dominio);
     });
 }
 
@@ -54,40 +60,13 @@ function validarPassword(password) {
 
 function validarRut(rut) {
 
-    if (!rut) return false;
+    if (!rut || typeof rut !== "string") return false;
 
-    rut = rut.toUpperCase().trim();
+    rut = rut.trim();
 
-    if (rut.length < 7 || rut.length > 9) return false;
-
-    const cuerpo = rut.slice(0, -1);
-    const dv = rut.slice(-1);
-
-    if (!/^[0-9]+$/.test(cuerpo)) return false;
-    if (!/^[0-9K]$/.test(dv)) return false;
-
-    let suma = 0;
-    let multiplicador = 2;
-
-    for (let i = cuerpo.length - 1; i >= 0; i--) {
-        suma += parseInt(cuerpo.charAt(i), 10) * multiplicador;
-
-        multiplicador = multiplicador === 7 ? 2 : multiplicador + 1;
-    }
-
-    const resto = 11 - (suma % 11);
-
-    let dvEsperado;
-
-    if (resto === 11) {
-        dvEsperado = "0";
-    } else if (resto === 10) {
-        dvEsperado = "K";
-    } else {
-        dvEsperado = String(resto);
-    }
-
-    return dv === dvEsperado;
+    // RUN solicitado por el formulario: entre 7 y 9 dígitos,
+    // sin puntos, guion ni letra K.
+    return /^[0-9]{7,9}$/.test(rut);
 }
 
 
@@ -138,18 +117,17 @@ function validarNombre(nombre, maximo) {
 }
 
 /*
-Valida que un teléfono sea opcional y que cumpla con el formato chileno.
-El formato chileno puede ser: +569XXXXXXXX, 569XXXXXXXX o 9XXXXXXXX.
+Valida que el teléfono sea obligatorio y tenga formato móvil chileno.
+Debe contener exactamente 9 dígitos y comenzar con 9.
 */
 function validarTelefono(telefono) {
 
-    // Si está vacío, es válido porque el teléfono es opcional
-    if (!telefono) return true;
+    if (!telefono || typeof telefono !== "string") return false;
 
     telefono = telefono.trim();
 
-    // Formato chileno: +569XXXXXXXX o 569XXXXXXXX o 9XXXXXXXX
-    return /^(\+?56)?9[0-9]{8}$/.test(telefono);
+    // Teléfono móvil chileno: exactamente 9 dígitos y debe comenzar con 9.
+    return /^9[0-9]{8}$/.test(telefono);
 }
 
 

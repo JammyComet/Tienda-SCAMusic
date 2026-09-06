@@ -305,6 +305,37 @@ function confirmarPago() {
     const detalle = obtenerDetalleCarrito();
     if (detalle.length === 0) return;
 
+    const sesion = obtenerSesion();
+
+    if (!sesion) {
+        const irALogin = () => {
+            sessionStorage.setItem("colo_retorno_login", "/carrito");
+            window.location.href = "/login";
+        };
+
+        if (typeof Swal === "undefined") {
+            if (confirm("Debes iniciar sesión para pagar. Tu carrito se mantendrá guardado. ¿Quieres iniciar sesión ahora?")) {
+                irALogin();
+            }
+            return;
+        }
+
+        Swal.fire({
+            icon: "info",
+            title: "Inicia sesión para pagar",
+            text: "Tu carrito se mantendrá guardado mientras inicias sesión.",
+            showCancelButton: true,
+            confirmButtonText: "Iniciar sesión",
+            cancelButtonText: "Seguir comprando"
+        }).then(resultado => {
+            if (resultado.isConfirmed) {
+                irALogin();
+            }
+        });
+
+        return;
+    }
+
     const total = detalle.reduce(
         (suma, producto) => suma + producto.subtotal,
         0
@@ -359,9 +390,20 @@ function renderizarCarrito() {
     totalCarrito.textContent = formatearPrecioCarrito(total);
 
     const estaVacio = detalle.length === 0;
+    const sesion = obtenerSesion();
+    const mensajePagoSesion = document.getElementById("mensajePagoSesion");
+
     carritoVacio.classList.toggle("d-none", !estaVacio);
     btnPagar.disabled = estaVacio;
     btnVaciar.disabled = estaVacio;
+
+    if (!estaVacio && !sesion) {
+        btnPagar.textContent = "INICIAR SESIÓN PARA PAGAR";
+        mensajePagoSesion?.classList.remove("d-none");
+    } else {
+        btnPagar.textContent = "PAGAR";
+        mensajePagoSesion?.classList.add("d-none");
+    }
 
     actualizarContadorCarrito();
 }

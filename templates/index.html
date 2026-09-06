@@ -25,86 +25,16 @@
         </div>
     </section>
 
-    <section class="productos container-fluid py-4 px-3">
-        <h2 class="text-center mb-4">NUEVOS DISCOS A LA VENTA</h2>
+    <section class="productos carrusel-serpiente-seccion container-fluid py-5 px-3">
+        <h2 class="text-center mb-4">DISCOS DISPONIBLES</h2>
 
         <div id="carouselDiscos"
-             class="carousel slide mi-carousel"
+             class="carousel slide carrusel-serpiente"
              data-bs-ride="carousel"
-             data-bs-interval="3000">
+             data-bs-interval="3500">
 
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="carousel-producto">
-                        <img class="d-block w-100"
-                             src="{{ url_for('static', filename='imagenes/31Minutos.jpg') }}"
-                             alt="31 Minutos - 31 Minutos">
-                        <div class="carousel-producto-info">
-                            <h3>31 Minutos - 31 Minutos</h3>
-                            <p>$12.900</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-item">
-                    <div class="carousel-producto">
-                        <img class="d-block w-100"
-                             src="{{ url_for('static', filename='imagenes/louder.jpg') }}"
-                             alt="Taking Back Sunday - Louder Now">
-                        <div class="carousel-producto-info">
-                            <h3>Taking Back Sunday - Louder Now (20th Anniversary)</h3>
-                            <p>$24.990</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-item">
-                    <div class="carousel-producto">
-                        <img class="d-block w-100"
-                             src="{{ url_for('static', filename='imagenes/dangerdays.jpg') }}"
-                             alt="My Chemical Romance - Danger Days">
-                        <div class="carousel-producto-info">
-                            <h3>My Chemical Romance - Danger Days: The True Lives of the Fabulous Killjoys (Deluxe Edition)</h3>
-                            <p>$26.990</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-item">
-                    <div class="carousel-producto">
-                        <img class="d-block w-100"
-                             src="{{ url_for('static', filename='imagenes/soda.png') }}"
-                             alt="Soda Stereo - Canción Animal">
-                        <div class="carousel-producto-info">
-                            <h3>Soda Stereo - Canción Animal</h3>
-                            <p>$25.900</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-item">
-                    <div class="carousel-producto">
-                        <img class="d-block w-100"
-                             src="{{ url_for('static', filename='imagenes/billy.jpeg') }}"
-                             alt="Billy Idol - Billy Idol">
-                        <div class="carousel-producto-info">
-                            <h3>Billy Idol - Billy Idol</h3>
-                            <p>$34.900</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-item">
-                    <div class="carousel-producto">
-                        <img class="d-block w-100"
-                             src="{{ url_for('static', filename='imagenes/marco.jpg') }}"
-                             alt="Marco Antonio Solís - Trozos de mi alma">
-                        <div class="carousel-producto-info">
-                            <h3>Marco Antonio Solís - Trozos de mi alma</h3>
-                            <p>$42.900</p>
-                        </div>
-                    </div>
-                </div>
+            <div id="carouselDiscosInner" class="carousel-inner">
+                <!-- Los discos se cargan desde los productos guardados en localStorage. -->
             </div>
 
             <button class="carousel-control-prev"
@@ -125,4 +55,9 @@
         </div>
     </section>
 </main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/productos.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
 {% endblock %}

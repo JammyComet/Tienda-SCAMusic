@@ -89,7 +89,18 @@ function procesarRegistro() {
         return;
     }
 
+    const runNormalizado = run.value.trim();
     const correoNormalizado = correo.value.trim().toLowerCase();
+
+    if (existeRun(runNormalizado)) {
+        marcarInvalido(run);
+        Swal.fire(
+            "RUN registrado",
+            "Este RUN ya está registrado.",
+            "error"
+        );
+        return;
+    }
 
     if (existeCorreo(correoNormalizado)) {
         marcarInvalido(correo);
@@ -102,7 +113,7 @@ function procesarRegistro() {
     }
 
     const usuario = {
-        run: run.value.toUpperCase().trim(),
+        run: runNormalizado,
         nombre: nombre.value.trim(),
         apellidos: apellidos.value.trim(),
         correo: correoNormalizado,

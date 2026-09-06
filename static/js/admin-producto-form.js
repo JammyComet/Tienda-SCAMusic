@@ -104,7 +104,12 @@ function procesarFormularioProducto(codigoOriginal) {
     ) && esValido;
 
     if (!esValido) {
-        alert("Revisa los datos del producto.");
+        Swal.fire({
+            icon: "error",
+            title: "Revisa los datos del producto",
+            text: "Existen campos obligatorios o inválidos.",
+            confirmButtonText: "OK"
+        });
         return;
     }
 
@@ -130,8 +135,14 @@ function procesarFormularioProducto(codigoOriginal) {
             ? "Producto guardado correctamente. El producto está en stock crítico."
             : "Producto guardado correctamente.";
 
-    alert(mensaje);
-    window.location.href = "/admin/productos";
+    Swal.fire({
+        icon: "success",
+        title: "Producto guardado",
+        text: mensaje,
+        confirmButtonText: "OK"
+    }).then(function () {
+        window.location.href = "/admin/productos";
+    });
 }
 
 function inicializarFormularioProducto() {
@@ -146,8 +157,15 @@ function inicializarFormularioProducto() {
         const producto = obtenerProductoPorCodigo(codigoOriginal);
 
         if (!producto) {
-            alert("Producto no encontrado.");
-            window.location.href = "/admin/productos";
+            Swal.fire({
+                icon: "error",
+                title: "Producto no encontrado",
+                text: "No se encontró el producto solicitado.",
+                confirmButtonText: "OK"
+            }).then(function () {
+                window.location.href = "/admin/productos";
+            });
+
             return;
         }
 
