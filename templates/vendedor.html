@@ -1,0 +1,48 @@
+{% extends "vendedor-base.html" %}
+
+{% block title %}Inicio Vendedor | SCAMusica{% endblock %}
+
+{% block contenido %}
+<section>
+    <p class="text-secondary mb-1">Panel de vendedor</p>
+
+    <h2 class="display-6 fw-bold mb-2">
+        Hola, <span id="vendedorNombre">Vendedor</span>
+    </h2>
+
+    <p class="mb-4">
+        <strong id="vendedorRol">Vendedor</strong>
+        · <span id="vendedorCorreo"></span>
+    </p>
+
+    <div class="row g-4">
+        <div class="col-12 col-lg-6">
+            <article class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h3 class="h5 fw-bold">Productos</h3>
+                    <p class="text-secondary">
+                        Visualiza el listado, stock y detalle de los productos de la tienda.
+                    </p>
+                    <a href="{{ url_for('vendedor_productos') }}" class="btn btn-dark">
+                        Ver productos
+                    </a>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-12 col-lg-6">
+            <article class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h3 class="h5 fw-bold">Órdenes</h3>
+                    <p class="text-secondary">
+                        Visualiza las compras realizadas y revisa el detalle de cada orden.
+                    </p>
+                    <a href="{{ url_for('vendedor_ordenes') }}" class="btn btn-dark">
+                        Ver órdenes
+                    </a>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SCAMusica{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+    <header class="site-header bg-white py-2 px-3">
+        <div class="container-fluid d-flex flex-wrap align-items-center gap-2">
+
+            <a href="{{ url_for('inicio') }}">
+                <img src="{{ url_for('static', filename='imagenes/audifonos.png') }}" alt="Audifonos" class="site-logo img-fluid">
+            </a>
+
+            <h1 class="brand-title mb-0 me-lg-3">
+                <span class="texto">Lo mejor de lo mejor</span>
+                <span class="tienda">SCAMusica</span>
+                <span class="virtual">TIENDA VIRTUAL</span>
+            </h1>
+
+            <nav class="d-flex flex-wrap align-items-center flex-grow-1 gap-3 navegacion-principal">
+
+                <div class="menu-cds mx-auto">
+                    <a href="{{ url_for('inicio') }}" class="menu-cd menu-cd-1"><span>Home</span></a>
+                    <a href="{{ url_for('productos') }}" class="menu-cd menu-cd-2"><span>Productos</span></a>
+                    <a href="{{ url_for('nosotros') }}" class="menu-cd menu-cd-3"><span>Nosotros</span></a>
+                    <a href="{{ url_for('blogs') }}" class="menu-cd menu-cd-4"><span>Blogs</span></a>
+                    <a href="{{ url_for('contacto') }}" class="menu-cd menu-cd-5"><span>Contacto</span></a>
+                </div>
+
+                <div class="d-flex flex-wrap align-items-center gap-2 ms-lg-auto menu-cds-derecha">
+
+                    <a
+                        id="enlaceAdmin"
+                        href="{{ url_for('admin') }}"
+                        class="menu-cd menu-cd-admin d-none">
+                        <span>Administración</span>
+                    </a>
+
+                    <a
+                        id="enlaceVendedor"
+                        href="{{ url_for('vendedor') }}"
+                        class="menu-cd menu-cd-admin d-none">
+                        <span>Vendedor</span>
+                    </a>
+
+                    <span id="datosSesion" class="small d-none">
+                        👤 Bienvenido, <strong id="nombreSesion"></strong>
+                        · <span id="rolSesion"></span>
+                    </span>
+
+                    <!-- CARRITO -->
+                    <a href="{{ url_for('carrito') }}" class="text-dark text-decoration-none fw-bold">
+                        🛒 Carrito <span id="contadorCarrito" class="badge bg-dark">0</span>
+                    </a>
+
+                </div>
+            </nav>
+        </div>
+    </header>
+
+
+    <!-- INICIAR SESIÓN / REGISTRARSE -->
+    <div class="container-fluid">
+        <div class="auth-vinilos d-flex flex-wrap justify-content-end align-items-center gap-3 py-3">
+
+            <a
+                id="enlaceLogin"
+                href="{{ url_for('login') }}"
+                class="vinilo-link text-decoration-none">
+                <span class="vinilo-disco vinilo-disco-login">
+                    <svg class="vinilo-texto-svg" viewBox="0 0 200 200" aria-hidden="true">
+                        <defs>
+                            <path id="viniloPathLogin" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0"></path>
+                        </defs>
+                        <text class="vinilo-texto-circular">
+                            <textPath href="#viniloPathLogin">INICIAR SESIÓN • INICIAR SESIÓN • </textPath>
+                        </text>
+                    </svg>
+                    <span class="vinilo-surcos"></span>
+                    <span class="vinilo-etiqueta-central">
+                        <span class="vinilo-etiqueta-titulo">Entrar</span>
+                    </span>
+                </span>
+            </a>
+
+            <a
+                id="enlaceRegistro"
+                href="{{ url_for('registro') }}"
+                class="vinilo-link text-decoration-none">
+                <span class="vinilo-disco vinilo-disco-registro">
+                    <svg class="vinilo-texto-svg" viewBox="0 0 200 200" aria-hidden="true">
+                        <defs>
+                            <path id="viniloPathRegistro" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0"></path>
+                        </defs>
+                        <text class="vinilo-texto-circular">
+                            <textPath href="#viniloPathRegistro">REGISTRAR USUARIO • REGISTRAR USUARIO • </textPath>
+                        </text>
+                    </svg>
+                    <span class="vinilo-surcos"></span>
+                    <span class="vinilo-etiqueta-central">
+                        <span class="vinilo-etiqueta-titulo">Registro</span>
+                    </span>
+                </span>
+            </a>
+
+            <button
+                type="button"
+                id="btnCerrarSesion"
+                class="vinilo-link vinilo-boton d-none"
+                aria-label="Cerrar sesión">
+                <span class="vinilo-disco vinilo-disco-cerrar">
+                    <svg class="vinilo-texto-svg" viewBox="0 0 200 200" aria-hidden="true">
+                        <defs>
+                            <path id="viniloPathCerrar" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0"></path>
+                        </defs>
+                        <text class="vinilo-texto-circular">
+                            <textPath href="#viniloPathCerrar">CERRAR SESIÓN • CERRAR SESIÓN • </textPath>
+                        </text>
+                    </svg>
+                    <span class="vinilo-surcos"></span>
+                    <span class="vinilo-etiqueta-central">
+                        <span class="vinilo-etiqueta-titulo">Salir</span>
+                    </span>
+                </span>
+            </button>
+
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ url_for('static', filename='js/validaciones.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/validaciones-tiempo-real.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/storage.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/carrito.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/sesion.js') }}" defer></script>
+
+    {% block contenido %}{% endblock %}
+
+    {% include 'FOOTER.HTML' %}
+
+    {% block scripts %}{% endblock %}
+
+</body>
+</html>

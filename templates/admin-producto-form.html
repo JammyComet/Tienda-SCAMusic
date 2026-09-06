@@ -1,0 +1,408 @@
+{% extends "admin-base.html" %}
+
+
+{% block title %}
+Producto | Administrador SCAMusica
+{% endblock %}
+
+
+{% block contenido %}
+
+<section>
+
+    <div class="mb-4">
+
+        <p class="text-secondary mb-1">
+            Administración / Productos
+        </p>
+
+        <h2
+            id="tituloFormularioProducto"
+            class="fw-bold">
+            Nuevo producto
+        </h2>
+
+        <p class="text-secondary">
+            Ingresa los datos del nuevo producto.
+        </p>
+
+    </div>
+
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <form id="formProducto" novalidate>
+
+                <div class="row g-3">
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="codigoProducto"
+                            class="form-label">
+
+                            Código del producto
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="codigoProducto"
+                            class="form-control"
+                            minlength="3"
+                            required>
+
+                        <div class="invalid-feedback">
+                            El código es obligatorio y debe tener mínimo 3 caracteres.
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="nombreProducto"
+                            class="form-label">
+
+                            Nombre
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="nombreProducto"
+                            class="form-control"
+                            maxlength="100"
+                            required>
+
+                        <div class="invalid-feedback">
+                            El nombre es obligatorio y tiene un máximo de 100 caracteres.
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="artistaProducto"
+                            class="form-label">
+
+                            Artista
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="artistaProducto"
+                            class="form-control"
+                            maxlength="100"
+                            required>
+
+                        <div class="invalid-feedback">
+                            Ingresa el artista del producto.
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-6">
+
+                        <label
+                            for="categoriaProducto"
+                            class="form-label">
+
+                            Categoría
+
+                        </label>
+
+                        <select
+                            id="categoriaProducto"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                Seleccione una categoría
+                            </option>
+
+                        </select>
+
+                        <div class="invalid-feedback">
+                            Selecciona una categoría.
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <label
+                            for="descripcionProducto"
+                            class="form-label">
+
+                            Descripción
+
+                        </label>
+
+                        <textarea
+                            id="descripcionProducto"
+                            class="form-control"
+                            rows="4"
+                            maxlength="500"></textarea>
+
+                        <div class="form-text">
+                            Opcional. Máximo 500 caracteres.
+                        </div>
+
+                        <div class="invalid-feedback">
+                            La descripción no puede superar los 500 caracteres.
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-4">
+
+                        <label
+                            for="precioProducto"
+                            class="form-label">
+
+                            Precio
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="precioProducto"
+                            class="form-control"
+                            min="0"
+                            step="0.01"
+                            required>
+
+                        <div class="invalid-feedback">
+                            El precio debe ser igual o superior a 0.
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-4">
+
+                        <label
+                            for="stockProducto"
+                            class="form-label">
+
+                            Stock
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="stockProducto"
+                            class="form-control"
+                            min="0"
+                            step="1"
+                            required>
+
+                        <div class="invalid-feedback">
+                            El stock debe ser un número entero igual o superior a 0.
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-4">
+
+                        <label
+                            for="stockCriticoProducto"
+                            class="form-label">
+
+                            Stock crítico
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="stockCriticoProducto"
+                            class="form-control"
+                            min="0"
+                            step="1">
+
+                        <div class="form-text">
+                            Opcional.
+                        </div>
+
+                        <div class="invalid-feedback">
+                            El stock crítico debe ser un número entero igual o superior a 0.
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-4">
+
+                        <label
+                            for="formatoProducto"
+                            class="form-label">
+
+                            Formato
+
+                        </label>
+
+                        <select
+                            id="formatoProducto"
+                            class="form-select"
+                            required>
+
+                            <option value="">
+                                Seleccione
+                            </option>
+
+                            <option value="Vinilo">
+                                Vinilo
+                            </option>
+
+                            <option value="CD">
+                                CD
+                            </option>
+
+                            <option value="Cassette">
+                                Cassette
+                            </option>
+
+                        </select>
+
+                        <div class="invalid-feedback">
+                            Selecciona un formato.
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-4">
+
+                        <label
+                            for="anioProducto"
+                            class="form-label">
+
+                            Año
+
+                        </label>
+
+                        <input
+                            type="number"
+                            id="anioProducto"
+                            class="form-control"
+                            min="1"
+                            step="1">
+
+                        <div class="form-text">
+                            Opcional.
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-12 col-md-4">
+
+                        <label
+                            for="estadoProducto"
+                            class="form-label">
+
+                            Estado
+
+                        </label>
+
+                        <select
+                            id="estadoProducto"
+                            class="form-select"
+                            required>
+
+                            <option value="Activo">
+                                Activo
+                            </option>
+
+                            <option value="Inactivo">
+                                Inactivo
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-12">
+
+                        <label
+                            for="imagenProducto"
+                            class="form-label">
+
+                            Imagen
+
+                        </label>
+
+                        <input
+                            type="text"
+                            id="imagenProducto"
+                            class="form-control"
+                            placeholder="Ej: discos/mi-disco.jpg">
+
+                        <div class="form-text">
+                            Opcional. Ruta dentro de static/imagenes.
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <div class="d-flex flex-wrap gap-2 mt-4">
+
+                    <button
+                        type="submit"
+                        class="btn btn-dark">
+
+                        Guardar producto
+
+                    </button>
+
+
+                    <a
+                        href="{{ url_for('admin_productos') }}"
+                        class="btn btn-outline-secondary">
+
+                        Cancelar
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+<script
+    src="{{ url_for('static', filename='js/productos.js') }}"
+    defer>
+</script>
+
+<script
+    src="{{ url_for('static', filename='js/admin-producto-form.js') }}"
+    defer>
+</script>
+
+{% endblock %}

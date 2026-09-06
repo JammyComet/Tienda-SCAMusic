@@ -49,6 +49,7 @@ body {
     letter-spacing: 14px;
 }
 
+
 footer {
     background-color: #1a1a1a;
     text-align: center;
@@ -57,6 +58,7 @@ footer {
     bottom: 0;
     width: 100%;
 }
+
 
 .info-tienda {
     min-height: 300px;

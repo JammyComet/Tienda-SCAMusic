@@ -1,0 +1,41 @@
+{% extends "vendedor-base.html" %}
+
+{% block title %}Productos | Vendedor SCAMusica{% endblock %}
+
+{% block contenido %}
+<section>
+    <div class="mb-4">
+        <p class="text-secondary mb-1">Vendedor</p>
+        <h2 class="fw-bold">Productos</h2>
+        <p class="text-secondary mb-0">
+            Listado de productos disponibles en la tienda. Esta vista es solo de consulta.
+        </p>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Categoría</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaProductosVendedor"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/productos.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/vendedor-productos.js') }}" defer></script>
+{% endblock %}

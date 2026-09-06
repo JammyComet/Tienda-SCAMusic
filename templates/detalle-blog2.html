@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}detalle-blog2{% endblock %}
+
+{% block contenido %}
+
+<main>
+        <section class="detalle-blog py-5">
+            <div class="container">
+                <h1 class="text-white text-center fw-bold mb-5">CAMBIOS A LA EVOLUCIÓN SONORA</h1>
+
+                <article class="blog-card row align-items-center g-4 p-4 m-0">
+                    <div class="col-12 col-lg-7">
+                        <p class="blog-detail-text mb-0">
+                            La evolución sonora es el síntoma más claro de que un proyecto musical está genuinamente vivo. 
+                            Los artistas y bandas cambian de género o exploran nuevas texturas porque el estancamiento es el mayor enemigo de la creatividad.
+                            A medida que un músico madura, absorbe nuevas influencias, atraviesa diferentes etapas vitales y domina nuevas tecnologías, 
+                            su sonido debe mutar obligatoriamente para reflejar esa realidad con honestidad. Aunque estos giros estilísticos a veces desafíen
+                            las expectativas del público más purista, esta metamorfosis es un proceso vital e innegociable; es la única manera en que un artista
+                            puede mantener la autenticidad de su obra y seguir empujando los límites de su propia expresión sin convertirse en una copia de sí mismo.
+                        </p>
+                    </div>
+
+                    <div class="col-12 col-lg-5">
+                        <img src="{{ url_for('static', filename='imagenes/taylor.png') }}" alt="Bandas que cambiaron" class="img-fluid detail-blog-img w-100">
+                    </div>
+
+                    <div class="col-12">
+                        <a href="{{ url_for('blogs') }}" class="btn btn-danger fw-bold">VOLVER AL BLOG</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+{% endblock %}

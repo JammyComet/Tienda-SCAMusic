@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Detalle del producto{% endblock %}
+
+
+{% block contenido %}
+
+    <main class="container py-5">
+
+        <div id="detalleProducto">
+
+            <div class="row g-5 align-items-start">
+                <div class="col-12 col-lg-5 text-center">
+
+                    <img
+                        id="detalleImagen"
+                        src=""
+                        alt=""
+                        class="img-fluid"
+                        style="max-height: 500px;"
+                    >
+                </div>
+                <div class="col-12 col-lg-7">
+                    <h1
+                        id="detalleNombre"
+                        class="fw-bold mb-2">
+                    </h1>
+                    <h2
+                        id="detalleArtista"
+                        class="h4 text-secondary mb-3">
+                    </h2>
+                    <span
+                        id="detalleCategoria"
+                        class="badge bg-dark mb-3">
+                    </span>
+                    <p class="mb-2">
+
+                        <strong>Formato:</strong>
+
+                        <span id="detalleFormato"></span>
+                    </p>
+                    <p class="mb-2">
+                        <strong>Año:</strong>
+                        <span id="detalleAnio"></span>
+                    </p>
+                    <p class="mb-3">
+                        <strong>Stock:</strong>
+                        <span id="detalleStock"></span>
+                    </p>
+                    <h3
+                        id="detallePrecio"
+                        class="fw-bold mb-4">
+                    </h3>
+                    <h4>
+                        Descripción
+                    </h4>
+                    <p
+                        id="detalleDescripcion"
+                        class="text-secondary">
+                    </p>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <button
+                            type="button"
+                            id="btnAgregarCarrito"
+                            class="btn btn-dark">
+                            Añadir al carrito
+                        </button>
+
+                        <a
+                            href="{{ url_for('productos') }}"
+                            class="btn btn-outline-dark">
+                            Volver a productos
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <script
+        src="{{ url_for('static', filename='js/productos.js') }}"
+        defer>
+    </script>
+
+    <script
+        src="{{ url_for('static', filename='js/producto-detalle.js') }}"
+        defer>
+    </script>
+
+{% endblock %}

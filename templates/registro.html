@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}registro{% endblock %}
+
+{% block contenido %}
+    <main>
+        <form id="formularioRegistro" class="form-contenedor border p-4 mx-auto my-4" novalidate>
+            <h2 class="text-center fw-bold mb-4">Registro de Usuario</h2>
+
+            <div class="mb-3">
+                <label for="runR" class="form-label">RUN:</label>
+                <input type="text" id="runR" name="runR" minlength="7" maxlength="9" pattern="[0-9]{7,9}" inputmode="numeric" required class="form-control">
+                <div class="invalid-feedback">Ingresa un RUN de 7 a 9 dígitos, sin puntos ni guion.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="nombreR" class="form-label">Nombre Completo:</label>
+                <input type="text" id="nombreR" name="nombreR" maxlength="50" required class="form-control">
+                <div class="invalid-feedback">El nombre es obligatorio y debe tener máximo 50 caracteres.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="apellidosR" class="form-label">Apellidos:</label>
+                <input type="text" id="apellidosR" name="apellidosR" maxlength="100" required class="form-control">
+                <div class="invalid-feedback">Los apellidos son obligatorios y deben tener máximo 100 caracteres.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="emailR" class="form-label">Correo:</label>
+                <input type="email" id="emailR" name="emailR" maxlength="100" required class="form-control">
+                <div class="invalid-feedback">Ingresa un correo válido (@duoc.cl, @profesor.duoc.cl o @gmail.com).</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="Fecha_nacimientoR" class="form-label">Fecha de Nacimiento (Opcional):</label>
+                <input type="date" id="Fecha_nacimientoR" name="Fecha_nacimientoR" class="form-control">
+            </div>
+
+            <div class="mb-3">
+                <label for="contrasenaR" class="form-label">Contraseña:</label>
+                <input type="password" id="contrasenaR" name="contrasenaR" minlength="4" maxlength="10" required class="form-control">
+                <div class="invalid-feedback">La contraseña debe tener entre 4 y 10 caracteres.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="confirmar_contrasenaR" class="form-label">Confirmar Contraseña:</label>
+                <input type="password" id="confirmar_contrasenaR" name="confirmar_contrasenaR" minlength="4" maxlength="10" required class="form-control">
+                <div class="invalid-feedback">Las contraseñas deben coincidir.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="telefonoR" class="form-label">Teléfono:</label>
+                <input type="tel" id="telefonoR" name="telefonoR" minlength="9" maxlength="9" pattern="9[0-9]{8}" inputmode="numeric" required class="form-control">
+                <div class="invalid-feedback">Ingresa 9 dígitos y comienza con 9.</div>
+            </div>
+
+            <div class="mb-3">
+                <select id="regionR" name="regionR" required class="form-select">
+                    <option value="">Seleccione la región</option>
+                </select>
+                <div class="invalid-feedback">La región es obligatoria.</div>
+            </div>
+
+            <div class="mb-3">
+                <select id="comunaR" name="comunaR" required class="form-select">
+                    <option value="">Seleccione la comuna</option>
+                </select>
+                <div class="invalid-feedback">La comuna es obligatoria.</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="direccionR" class="form-label">Dirección:</label>
+                <input type="text" id="direccionR" name="direccionR" maxlength="300" required class="form-control">
+                <div class="invalid-feedback">La dirección es obligatoria y debe tener máximo 300 caracteres.</div>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-dark px-4">Registrar</button>
+            </div>
+        </form>
+    </main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/usuarios.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/regiones.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/registro.js') }}" defer></script>
+{% endblock %}

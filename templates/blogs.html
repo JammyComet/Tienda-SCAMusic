@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}blog{% endblock %}
+
+{% block contenido %}
+    <main>
+        <section class="blogs py-5">
+            <div class="container">
+                <h1 class="text-white text-center fw-bold mb-5">TE PODRÍA INTERESAR</h1>
+
+                <div class="d-flex flex-column gap-4">
+                    <article class="blog-card row align-items-center g-4 p-4 m-0">
+                        <div class="col-12 col-lg-7">
+                            <h2 class="text-white mb-3">ÁLBUMES MÚSICALES</h2>
+                            <p class="blog-description mb-4">
+                                Más que música, es un mundo.
+                            </p>
+                            <a href="{{ url_for('detalle_blog1') }}" class="btn btn-danger fw-bold">VER</a>
+                        </div>
+
+                        <div class="col-12 col-lg-5">
+                            <img src="{{ url_for('static', filename='imagenes/conceptuales.jpg') }}" alt="Persona escuchando música" class="img-fluid blog-img w-100">
+                        </div>
+                    </article>
+
+                    <article class="blog-card row align-items-center g-4 p-4 m-0">
+                        <div class="col-12 col-lg-7">
+                            <h2 class="text-white mb-3">CÓMO EVOLUCIONAN LOS ARTISTAS Y BANDAS</h2>
+                            <p class="blog-description mb-4">
+                                Siempre ocurren casos de diferencias creativas, evoluciones en géneros, cambios, etc.
+                            </p>
+                            <a href="{{ url_for('detalle_blog2') }}" class="btn btn-danger fw-bold">VER</a>
+                        </div>
+
+                        <div class="col-12 col-lg-5">
+                            <img src="{{ url_for('static', filename='imagenes/artistas.jpg') }}" alt="Artistas que cambiaron" class="img-fluid blog-img w-100">
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+{% endblock %}

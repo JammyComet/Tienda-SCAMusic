@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}SCAMusica{% endblock %}
+
+{% block contenido %}
+<main>
+    <section class="info-tienda bg-dark text-white py-4">
+        <div class="container-fluid px-4 px-lg-5">
+            <div class="row align-items-center g-4">
+                <div class="col-12 col-lg-6">
+                    <h2 class="titulo mb-3">
+                        <span class="co d-block">PORQUE AMAS LA</span>
+                        <span class="musica-grande d-block">MÚSICA</span>
+                    </h2>
+
+                    <p class="descripcion fs-5 mb-0">
+                        Lo nuevo y lo viejo, todo en una página.
+                    </p>
+                </div>
+
+                <div class="col-12 col-lg-6 text-center text-lg-end">
+                    <img src="{{ url_for('static', filename='imagenes/escuchando.jpg') }}" alt="Persona escuchando música" class="img-fluid hero-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="productos carrusel-serpiente-seccion container-fluid py-5 px-3">
+        <h2 class="text-center mb-4">DISCOS DISPONIBLES</h2>
+
+        <div id="carouselDiscos"
+             class="carousel slide carrusel-serpiente"
+             data-bs-ride="carousel"
+             data-bs-interval="3500">
+
+            <div id="carouselDiscosInner" class="carousel-inner">
+                <!-- Los discos se cargan desde los productos guardados en localStorage. -->
+            </div>
+
+            <button class="carousel-control-prev"
+                    type="button"
+                    data-bs-target="#carouselDiscos"
+                    data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+
+            <button class="carousel-control-next"
+                    type="button"
+                    data-bs-target="#carouselDiscos"
+                    data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>
+    </section>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/productos.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/index.js') }}" defer></script>
+{% endblock %}
