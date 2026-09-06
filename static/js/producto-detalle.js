@@ -29,6 +29,22 @@ document.addEventListener("DOMContentLoaded",
 
 
         mostrarDetalleProducto(producto);
+
+        const botonAgregar =
+            document.getElementById(
+                "btnAgregarCarrito"
+            );
+
+        if (botonAgregar) {
+            botonAgregar.addEventListener(
+                "click",
+                function () {
+                    agregarAlCarrito(
+                        producto.codigo
+                    );
+                }
+            );
+        }
     }
 );
 

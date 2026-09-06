@@ -153,5 +153,26 @@ function validarTelefono(telefono) {
 }
 
 
+function numeroEnRango(valor, minimo) {
+    const numero = Number(valor);
+
+    if (isNaN(numero)) {
+        return false;
+    }
+
+    return numero >= minimo;
+}
 
 
+function enteroEnRango(valor, minimo) {
+    const numero = Number(valor);
+
+    if (isNaN(numero)) {
+        return false;
+    }
+
+    return (
+        Number.isInteger(numero) &&
+        numero >= minimo
+    );
+}

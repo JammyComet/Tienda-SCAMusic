@@ -58,11 +58,20 @@
                         id="detalleDescripcion"
                         class="text-secondary">
                     </p>
-                    <a
-                        href="{{ url_for('productos') }}"
-                        class="btn btn-outline-dark mt-3">
-                        Volver a productos
-                    </a>
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                        <button
+                            type="button"
+                            id="btnAgregarCarrito"
+                            class="btn btn-dark">
+                            Añadir al carrito
+                        </button>
+
+                        <a
+                            href="{{ url_for('productos') }}"
+                            class="btn btn-outline-dark">
+                            Volver a productos
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

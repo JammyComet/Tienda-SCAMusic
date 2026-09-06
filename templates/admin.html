@@ -1,0 +1,55 @@
+{% extends "admin-base.html" %}
+
+{% block title %}Inicio Administrador | SCAMusica{% endblock %}
+
+{% block contenido %}
+    <section>
+        <p class="text-secondary mb-1">
+            Panel de administración
+        </p>
+
+        <h2 class="display-6 fw-bold mb-2">
+            Hola, Administrador
+        </h2>
+
+        <p class="mb-4">
+            Sesión iniciada como
+            <strong id="adminCorreo"></strong>
+        </p>
+
+        <div class="row g-4">
+            <div class="col-12 col-lg-6">
+
+                <article class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="h5 fw-bold">
+                            Productos
+                        </h3>
+                        <p class="text-secondary">
+                            Administra el listado, creación y edición de productos.
+                        </p>
+                        <a
+                            href="{{ url_for('admin_productos') }}"
+                            class="btn btn-dark">
+                            Administrar productos
+                        </a>
+                    </div>
+                </article>
+            </div>
+
+            <div class="col-12 col-lg-6">
+                <article class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h3 class="h5 fw-bold">
+                            Usuarios
+                        </h3>
+
+                        <p class="text-secondary mb-0">
+                            Desde aquí se administrará el listado, creación y edición de usuarios.
+                        </p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+{% endblock %}

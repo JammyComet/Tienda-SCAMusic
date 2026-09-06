@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Administrador | SCAMusica{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
+</head>
+<body class="admin-body">
+
+    <div class="container-fluid">
+        <div class="row min-vh-100">
+
+            <aside class="col-12 col-md-3 col-lg-2 admin-sidebar p-3">
+                <h1 class="h4 fw-bold mb-4">
+                    SCAMusica Admin
+                </h1>
+
+                <nav class="nav flex-column gap-2">
+                    <a
+                        href="{{ url_for('admin') }}"
+                        class="nav-link admin-nav-link">Inicio
+                    </a>
+
+                    <a
+                        href="{{ url_for('admin_productos') }}"
+                        class="nav-link admin-nav-link">Productos
+                    </a>
+
+                    <span 
+                        class="nav-link admin-nav-link disabled">Usuarios
+                    </span>
+
+                    <hr>
+
+                    <a
+                        href="{{ url_for('inicio') }}"
+                        class="nav-link admin-nav-link">
+                        Volver a la tienda
+                    </a>
+                </nav>
+            </aside>
+
+            <main class="col-12 col-md-9 col-lg-10 p-4 p-lg-5">
+                {% block contenido %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/storage.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/admin.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/validaciones.js') }}" defer></script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

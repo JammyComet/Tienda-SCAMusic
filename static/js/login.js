@@ -43,5 +43,12 @@ function validarLogin() {
     });
 
     alert("Inicio de sesión exitoso");
+
+    if (usuarioEncontrado.rol === "Administrador") {
+        window.location.href = "/admin";
+    } else {
+        window.location.href = "/";
+    }
+
     return true;
 }

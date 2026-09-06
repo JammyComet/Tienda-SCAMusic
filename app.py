@@ -50,5 +50,18 @@ def producto_detalle():
     return render_template("producto-detalle.html")
 
 
+@app.route("/admin")
+def admin():
+    return render_template("admin.html")
+
+@app.route("/admin/productos")
+def admin_productos():
+    return render_template("admin-productos.html")
+
+@app.route("/admin/productos/form")
+def admin_producto_form():
+    return render_template("admin-producto-form.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
