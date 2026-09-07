@@ -62,6 +62,10 @@ function cargarCarruselInicio() {
 
     const grupos = agruparProductosCarrusel(productos, 3);
 
+    if (grupos.length === 1) {
+        grupos.push(productos.slice(0, 3)); 
+    }
+
     contenedor.innerHTML = grupos.map((grupo, indiceGrupo) => `
         <div class="carousel-item ${indiceGrupo === 0 ? "active" : ""}">
             <div class="carrusel-serpiente-slide">
