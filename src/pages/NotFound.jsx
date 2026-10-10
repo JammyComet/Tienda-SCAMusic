@@ -1,0 +1,1 @@
+import { Button, Container } from "react-bootstrap"; import { Link } from "react-router-dom"; export default function NotFound(){return <Container className="py-5 text-center"><h1>404</h1><p>Página no encontrada.</p><Button as={Link} to="/" variant="dark">Volver al inicio</Button></Container>}

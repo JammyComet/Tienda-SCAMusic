@@ -1,0 +1,8 @@
+.atomic-price {
+  font-weight: 700;
+}
+
+.atomic-product-image {
+  width: 100%;
+  object-fit: cover;
+}
