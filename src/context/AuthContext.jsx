@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { buscarUsuario, cerrarSesion, guardarSesion, obtenerSesion, pasarCarritoInvitadoAUsuario } from "../data/storage";
+import { buscarUsuario, cerrarSesion, guardarSesion, obtenerSesion, pasarCarritoInvitadoAUsuario } from "../data/storage.js";
 export const ROLES={ADMINISTRADOR:"Administrador",VENDEDOR:"Vendedor",CLIENTE:"Cliente"};
 export const AuthContext=createContext(null);
 export function AuthProvider({children}){

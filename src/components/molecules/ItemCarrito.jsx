@@ -1,7 +1,8 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
-import ImagenProducto from "../atoms/ImagenProducto";
-import Precio from "../atoms/Precio";
-import { formatearPrecio } from "../../utils/format";
+import ImagenProducto from "../atoms/ImagenProducto.jsx";
+import Precio from "../atoms/Precio.jsx";
+import BotonAccion from "../atoms/BotonAccion.jsx";
+import { formatearPrecio } from "../../utils/format.js";
 
 export default function ItemCarrito({ producto, cambiarCantidad, eliminar }) {
   return (
@@ -31,7 +32,13 @@ export default function ItemCarrito({ producto, cambiarCantidad, eliminar }) {
               <Form.Control type="number" min="1" max={producto.stock} value={producto.cantidad} onChange={(event) => cambiarCantidad(producto.codigo, Number(event.target.value))} className="text-center carrito-input" />
               <Button size="sm" variant="outline-dark" onClick={() => cambiarCantidad(producto.codigo, producto.cantidad + 1)}>+</Button>
             </div>
-            <Button size="sm" variant="link" className="text-danger p-0" onClick={() => eliminar(producto.codigo)}>Eliminar</Button>
+            <BotonAccion
+              size="sm"
+              variant="link"
+              className="text-danger p-0"
+              etiqueta="Eliminar"
+              onClick={() => eliminar(producto.codigo)}
+            />
           </div>
         </div>
       </Col>

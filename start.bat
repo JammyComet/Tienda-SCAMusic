@@ -1,5 +1,10 @@
 @echo off
 cd /d "%~dp0"
-if not exist node_modules npm install
-npm run dev
+call npm install
+if errorlevel 1 (
+    echo Error al instalar las dependencias.
+    pause
+    exit /b 1
+)
+call npm run dev
 pause

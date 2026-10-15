@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { useAuth } from "../hooks/useAuth";
-import { validarCorreo, validarPassword } from "../utils/validaciones";
+import { useAuth } from "../hooks/useAuth.js";
+import { validarCorreo, validarPassword } from "../utils/validaciones.js";
 
 export default function Login() {
   const [correo, setCorreo] = useState("");

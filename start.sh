@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 cd "$(dirname "$0")"
-if [ ! -d node_modules ]; then npm install; fi
+npm install || exit 1
 npm run dev

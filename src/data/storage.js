@@ -1,6 +1,6 @@
-import { CATEGORIAS_INICIALES } from "./categorias";
-import { PRODUCTOS_INICIALES } from "./productos";
-import { USUARIOS_INICIALES } from "./usuarios";
+import { CATEGORIAS_INICIALES } from "./categorias.js";
+import { PRODUCTOS_INICIALES } from "./productos.js";
+import { USUARIOS_INICIALES } from "./usuarios.js";
 
 export const STORAGE_KEYS = {
   usuarios: "scamusic_atomic_usuarios",
