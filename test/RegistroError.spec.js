@@ -54,6 +54,12 @@ describe("Prueba de Renderizado Condicional - Registro", function () {
       "success"
     );
 
+    expect(Swal.fire).not.toHaveBeenCalledWith(
+      "Revisa el formulario",
+      "Existen campos obligatorios o inválidos.",
+      "error"
+    );
+
   });
 
 });
