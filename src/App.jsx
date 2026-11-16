@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/organisms/Layout";
 import AdminLayout from "./components/organisms/AdminLayout";
 import ProtectedRoute from "./components/organisms/ProtectedRoute";
@@ -15,10 +15,14 @@ import BlogDetalle from "./pages/BlogDetalle";
 import Contacto from "./pages/Contacto";
 import PagoExitoso from "./pages/PagoExitoso";
 import PagoError from "./pages/PagoError";
+import Perfil from "./pages/Perfil";
+import MisBoletas from "./pages/MisBoletas";
+import MiBoletaDetalle from "./pages/MiBoletaDetalle";
 import NotFound from "./pages/NotFound";
 import AdminPanel from "./pages/admin/AdminPanel";
 import AdminProductos from "./pages/admin/AdminProductos";
 import AdminProductoForm from "./pages/admin/AdminProductoForm";
+import AdminCategorias from "./pages/admin/AdminCategorias";
 import AdminUsuarios from "./pages/admin/AdminUsuarios";
 import AdminUsuarioForm from "./pages/admin/AdminUsuarioForm";
 import AdminOrdenes from "./pages/admin/AdminOrdenes";
@@ -40,7 +44,8 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/productos" element={<Productos />} />
         <Route path="/categorias" element={<Categorias />} />
-        <Route path="/ofertas" element={<Ofertas />} /> 
+        <Route path="/categorias/:categoriaId" element={<Categorias />} />
+        <Route path="/ofertas" element={<Ofertas />} />
         <Route path="/productos/:codigo" element={<ProductoDetalle />} />
         <Route path="/producto-detalle" element={<ProductoDetalle />} />
         <Route path="/carrito" element={<Carrito />} />
@@ -52,6 +57,12 @@ export default function App() {
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/pago-exitoso" element={<PagoExitoso />} />
         <Route path="/pago-error" element={<PagoError />} />
+
+        <Route element={<ProtectedRoute rolesPermitidos={[ROLES.CLIENTE]} />}>
+          <Route path="/perfil" element={<Perfil />} />
+          <Route path="/mis-boletas" element={<MisBoletas />} />
+          <Route path="/mis-boletas/:numero" element={<MiBoletaDetalle />} />
+        </Route>
       </Route>
 
       <Route element={<ProtectedRoute rolesPermitidos={[ROLES.ADMINISTRADOR]} />}>
@@ -60,6 +71,7 @@ export default function App() {
           <Route path="/admin/productos" element={<AdminProductos />} />
           <Route path="/admin/productos/nuevo" element={<AdminProductoForm />} />
           <Route path="/admin/productos/editar/:codigo" element={<AdminProductoForm />} />
+          <Route path="/admin/categorias" element={<AdminCategorias />} />
           <Route path="/admin/usuarios" element={<AdminUsuarios />} />
           <Route path="/admin/usuarios/nuevo" element={<AdminUsuarioForm />} />
           <Route path="/admin/usuarios/editar/:correo" element={<AdminUsuarioForm />} />
@@ -73,7 +85,7 @@ export default function App() {
 
       <Route element={<ProtectedRoute rolesPermitidos={[ROLES.VENDEDOR]} />}>
         <Route element={<AdminLayout modo="vendedor" />}>
-          <Route path="/vendedor" element={<VendedorPanel />} />
+          <Route path="/vendedor" element={<Navigate to="/vendedor/productos" replace />} />
           <Route path="/vendedor/productos" element={<VendedorProductos />} />
           <Route path="/vendedor/ordenes" element={<VendedorOrdenes />} />
           <Route path="/vendedor/ordenes/:codigo" element={<VendedorDetalleOrden />} />

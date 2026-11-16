@@ -4,7 +4,7 @@ import GraficoBarras from "../../components/organisms/GraficoBarras";
 import ResumenOrdenes from "../../components/organisms/ResumenOrdenes";
 import TarjetaKpi from "../../components/molecules/TarjetaKpi";
 import { useAuth } from "../../hooks/useAuth";
-import { obtenerNombreUsuario, obtenerOrdenes, obtenerProductos, obtenerUsuarios } from "../../data/storage";
+import { obtenerNombreUsuario, obtenerOrdenes, obtenerProductos, obtenerUsuarios, obtenerResumenReportes } from "../../data/storage";
 import { calcularEstadisticas, obtenerStockPorProducto, obtenerUnidadesPorProducto, obtenerVentasPorProducto } from "../../utils/estadisticas";
 import { formatearPrecio } from "../../utils/format";
 
@@ -13,13 +13,14 @@ export default function AdminPanel() {
   const ordenes = obtenerOrdenes();
   const productos = obtenerProductos();
   const usuarios = obtenerUsuarios();
-  const resumen = calcularEstadisticas(ordenes, productos, usuarios);
+  const resumen = obtenerResumenReportes() || calcularEstadisticas(ordenes, productos, usuarios);
   const accesos = [
     ["Productos", "Administra catálogo, stock, precios y ofertas.", "/admin/productos", "bi-disc"],
+    ["Categorías", "Crea y administra las categorías del catálogo.", "/admin/categorias", "bi-tags"],
     ["Usuarios", "Administra clientes, vendedores y administradores.", "/admin/usuarios", "bi-people"],
     ["Órdenes", "Revisa las compras y el detalle de cada venta.", "/admin/ordenes", "bi-receipt"],
     ["Boletas", "Consulta el historial de boletas emitidas y su detalle.", "/admin/boletas", "bi-file-earmark-text"],
-    ["Reportes", "Revisa el resumen general y el rendimiento de cada producto.", "/admin/reportes", "bi-bar-chart-line"],
+    ["Reportes", "Revisa ventas, productos y stock crítico.", "/admin/reportes", "bi-bar-chart-line"],
   ];
 
   return (

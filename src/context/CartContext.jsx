@@ -1,131 +1,92 @@
-import { createContext, useEffect, useMemo, useState } from "react";
-import { generarCodigoOrden, generarNumeroBoleta, guardarCarrito, guardarColeccion, guardarOrden, obtenerCarrito, obtenerProductos, STORAGE_KEYS, obtenerNombreUsuario } from "../data/storage";
-import { useAuth } from "../hooks/useAuth";
-import { precioConDescuento } from "../utils/format";
-import { REGIONES } from "../data/regiones";
-
-export const CartContext = createContext(null);
-
-export function CartProvider({ children }) {
-  const { usuario } = useAuth();
-  const [carrito, setCarrito] = useState(() => obtenerCarrito(usuario));
-  const recargar = () => setCarrito(obtenerCarrito(usuario));
-
-  useEffect(recargar, [usuario]);
-  useEffect(() => {
-    window.addEventListener("scamusic-data", recargar);
-    return () => window.removeEventListener("scamusic-data", recargar);
-  }, [usuario]);
-
-  function persistir(nuevo) {
-    guardarCarrito(nuevo, usuario);
-    setCarrito(nuevo);
-  }
-
-  function agregar(codigo) {
-    const producto = obtenerProductos().find((item) => item.codigo === codigo);
-    if (!producto || producto.estado !== "Activo") return { ok: false, mensaje: "El producto no está disponible." };
-    if (producto.stock <= 0) return { ok: false, mensaje: "Este producto no tiene stock." };
-    const nuevo = carrito.map((item) => ({ ...item }));
-    const existente = nuevo.find((item) => item.codigo === codigo);
-    if (existente) {
-      if (existente.cantidad >= producto.stock) return { ok: false, mensaje: "No hay más stock disponible." };
-      existente.cantidad += 1;
-    } else {
-      nuevo.push({ codigo, cantidad: 1 });
-    }
-    persistir(nuevo);
-    return { ok: true };
-  }
-
-  function cambiarCantidad(codigo, cantidad) {
-    const producto = obtenerProductos().find((item) => item.codigo === codigo);
-    const nuevo = carrito.map((item) => ({ ...item }));
-    const item = nuevo.find((actual) => actual.codigo === codigo);
-    if (!producto || !item) return false;
-    const nuevaCantidad = Number(cantidad);
-    if (nuevaCantidad <= 0) {
-      persistir(nuevo.filter((actual) => actual.codigo !== codigo));
-      return true;
-    }
-    if (!Number.isInteger(nuevaCantidad) || nuevaCantidad > producto.stock) return false;
-    item.cantidad = nuevaCantidad;
-    persistir(nuevo);
-    return true;
-  }
-
-  const eliminar = (codigo) => persistir(carrito.filter((item) => item.codigo !== codigo));
-  const vaciar = () => persistir([]);
-
-  const items = useMemo(() => carrito.map((item) => {
-    const producto = obtenerProductos().find((actual) => actual.codigo === item.codigo);
-    if (!producto) return null;
-    const precioOriginal = Number(producto.precio);
-    const precio = precioConDescuento(producto);
-    return { ...producto, precioOriginal, precio, cantidad: item.cantidad, subtotal: precio * item.cantidad };
-  }).filter(Boolean), [carrito]);
-
-  const total = items.reduce((suma, producto) => suma + producto.subtotal, 0);
-  const totalItems = items.reduce((suma, producto) => suma + producto.cantidad, 0);
-
-  function finalizarCompra(entrega = {}) {
-    if (!usuario) return { ok: false, requiereLogin: true };
-    const regionEntrega = String(entrega.region || usuario.region || "").trim();
-    const comunaEntrega = String(entrega.comuna || usuario.comuna || "").trim();
-    const direccionEntrega = String(entrega.direccion || usuario.direccion || "").trim();
-    if (!regionEntrega || !comunaEntrega || !direccionEntrega) return { ok: false, mensaje: "Completa la dirección de entrega." };
-    if (!REGIONES[regionEntrega]?.includes(comunaEntrega)) return { ok: false, mensaje: "La comuna seleccionada no corresponde a la región indicada." };
-    const productos = obtenerProductos();
-    for (const item of carrito) {
-      const producto = productos.find((actual) => actual.codigo === item.codigo);
-      if (!producto || producto.estado !== "Activo" || item.cantidad > producto.stock) {
-        return { ok: false, mensaje: `Stock insuficiente o producto no disponible: ${producto?.nombre || item.codigo}.` };
+import { createContext, useEffect, useMemo, useRef, useState } from 'react';
+import { guardarCarrito, guardarOrden, obtenerCarrito, obtenerProductos, obtenerNombreUsuario } from '../data/storage';
+import { useAuth } from '../hooks/useAuth';
+import { precioConDescuento } from '../utils/format';
+import { REGIONES } from '../data/regiones';
+import Swal from 'sweetalert2';
+export const CartContext=createContext(null);
+export function CartProvider({children}){
+  const {usuario}=useAuth();
+  const [carrito,setCarrito]=useState(()=>obtenerCarrito(usuario));
+  const carritoActual=useRef(carrito);
+  const peticionesPendientes=useRef(0);
+  const versionCambio=useRef(0);
+  const compraEnCurso=useRef(false);
+  const usuarioActualId=useRef(usuario?.id ?? null);
+  function actualizarVista(nuevo){carritoActual.current=nuevo;setCarrito(nuevo);}
+  useEffect(()=>{
+    usuarioActualId.current=usuario?.id ?? null;
+    versionCambio.current++;
+    peticionesPendientes.current=0;
+    actualizarVista(obtenerCarrito(usuario));
+  },[usuario]);
+  useEffect(()=>{
+    const fn=()=>{
+      // No reemplazar una actualización optimista reciente por otra anterior
+      // mientras el backend todavía recibe los cambios de este usuario.
+      if(peticionesPendientes.current===0)actualizarVista(obtenerCarrito(usuario));
+    };
+    window.addEventListener('scamusic-data',fn);
+    return()=>window.removeEventListener('scamusic-data',fn);
+  },[usuario]);
+  async function persistir(nuevo){
+    const idUsuario=usuario?.id ?? null;
+    const version=++versionCambio.current;
+    peticionesPendientes.current++;
+    actualizarVista(nuevo);
+    try{await guardarCarrito(nuevo,usuario);}
+    catch(e){
+      if(idUsuario===usuarioActualId.current){
+        if(version===versionCambio.current)actualizarVista(obtenerCarrito(usuario));
+        Swal.fire('Error de conexión',e.message,'error');
+      }
+      throw e;
+    } finally {
+      if(idUsuario===usuarioActualId.current){
+        peticionesPendientes.current=Math.max(0,peticionesPendientes.current-1);
+        if(peticionesPendientes.current===0)actualizarVista(obtenerCarrito(usuario));
       }
     }
-    const detalle = items;
-    if (!detalle.length) return { ok: false, mensaje: "El carrito está vacío." };
-
-    detalle.forEach((item) => {
-      productos.find((producto) => producto.codigo === item.codigo).stock -= item.cantidad;
-    });
-    guardarColeccion(STORAGE_KEYS.productos, productos);
-
-    const orden = {
-      codigo: generarCodigoOrden(),
-      boletaNumero: generarNumeroBoleta(),
-      fecha: new Date().toISOString(),
-      cliente: {
-        run: usuario.run || "",
-        nombre: obtenerNombreUsuario(usuario),
-        correo: usuario.correo,
-        telefono: usuario.telefono || "",
-        region: regionEntrega,
-        comuna: comunaEntrega,
-        direccion: direccionEntrega,
-      },
-      entrega: {
-        region: regionEntrega,
-        comuna: comunaEntrega,
-        direccion: direccionEntrega,
-      },
-      productos: detalle.map((producto) => ({
-        codigo: producto.codigo,
-        nombre: producto.nombre,
-        artista: producto.artista || "",
-        precioOriginal: Number(producto.precioOriginal),
-        descuento: Number(producto.descuento || 0),
-        precio: Number(producto.precio),
-        cantidad: Number(producto.cantidad),
-        subtotal: Number(producto.subtotal),
-      })),
-      total,
-      estado: "Pagada",
-    };
-
-    guardarOrden(orden);
-    vaciar();
-    return { ok: true, orden };
   }
-
-  return <CartContext.Provider value={{ items, total, totalItems, agregar, cambiarCantidad, eliminar, vaciar, finalizarCompra }}>{children}</CartContext.Provider>;
+  function agregar(codigo){
+    const producto=obtenerProductos().find(p=>p.codigo===codigo);
+    if(!producto || producto.estado!=='Activo')return {ok:false,mensaje:'El producto no está disponible.'};
+    if(producto.stock<=0)return {ok:false,mensaje:'Este producto no tiene stock.'};
+    const nuevo=carritoActual.current.map(i=>({...i}));const existente=nuevo.find(i=>i.codigo===codigo);
+    if(existente){if(existente.cantidad>=producto.stock)return {ok:false,mensaje:'No hay más stock disponible.'};existente.cantidad++;}
+    else nuevo.push({codigo,cantidad:1});
+    void persistir(nuevo).catch(()=>{});return {ok:true};
+  }
+  function cambiarCantidad(codigo,cantidad){
+    const p=obtenerProductos().find(x=>x.codigo===codigo),nuevo=carritoActual.current.map(x=>({...x}));
+    const item=nuevo.find(x=>x.codigo===codigo);if(!p||!item)return false;
+    const n=Number(cantidad);if(n<=0){void persistir(nuevo.filter(x=>x.codigo!==codigo)).catch(()=>{});return true;}
+    if(!Number.isInteger(n)||n>p.stock)return false;
+    item.cantidad=n;void persistir(nuevo).catch(()=>{});return true;
+  }
+  const eliminar=codigo=>{void persistir(carritoActual.current.filter(i=>i.codigo!==codigo)).catch(()=>{});};
+  const vaciar=()=>persistir([]);
+  const items=useMemo(()=>carrito.map(i=>{
+    const p=obtenerProductos().find(x=>x.codigo===i.codigo);if(!p)return null;
+    const precioOriginal=Number(p.precio),precio=precioConDescuento(p);
+    return {...p,precioOriginal,precio,cantidad:i.cantidad,subtotal:precio*i.cantidad};
+  }).filter(Boolean),[carrito]);
+  const total=items.reduce((s,p)=>s+p.subtotal,0);
+  const totalItems=items.reduce((s,p)=>s+p.cantidad,0);
+  async function finalizarCompra(entrega={}){
+    if(compraEnCurso.current)return {ok:false,mensaje:'Ya estamos procesando tu compra.'};
+    if(!usuario)return {ok:false,requiereLogin:true};
+    const region=String(entrega.region||usuario.region||'').trim();
+    const comuna=String(entrega.comuna||usuario.comuna||'').trim();
+    const direccion=String(entrega.direccion||usuario.direccion||'').trim();
+    if(!region||!comuna||!direccion)return {ok:false,mensaje:'Completa la dirección de entrega.'};
+    if(!REGIONES[region]?.includes(comuna))return {ok:false,mensaje:'La comuna seleccionada no corresponde a la región indicada.'};
+    if(!items.length)return {ok:false,mensaje:'El carrito está vacío.'};
+    const datos={cliente:{run:usuario.run||'',nombre:obtenerNombreUsuario(usuario),correo:usuario.correo,telefono:usuario.telefono||'',region,comuna,direccion},entrega:{region,comuna,direccion},productos:items.map(i=>({codigo:i.codigo,cantidad:i.cantidad}))};
+    compraEnCurso.current=true;
+    try{const orden=await guardarOrden(datos);try {await vaciar();} catch { /* No repetir una compra confirmada si falla limpiar el carrito. */ }return {ok:true,orden};}
+    catch(e){return {ok:false,mensaje:e.message};}
+    finally{compraEnCurso.current=false;}
+  }
+  return <CartContext.Provider value={{items,total,totalItems,agregar,cambiarCantidad,eliminar,vaciar,finalizarCompra}}>{children}</CartContext.Provider>;
 }

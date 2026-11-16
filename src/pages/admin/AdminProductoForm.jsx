@@ -46,7 +46,7 @@ export default function AdminProductoForm() {
     anio: f.anio !== "" && (!Number.isInteger(Number(f.anio)) || Number(f.anio) < 1),
   };
 
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault();
     setValidado(true);
     setCodigoRepetido(false);
@@ -76,8 +76,10 @@ export default function AdminProductoForm() {
       descripcion: f.descripcion.trim(),
       imagen: f.imagen.trim(),
     };
-    guardarProducto(p, original?.codigo);
-    Swal.fire("Producto guardado", "Los datos fueron almacenados correctamente.", "success").then(() => nav("/admin/productos"));
+    try {
+      await guardarProducto(p, original?.codigo);
+      Swal.fire("Producto guardado", "Los datos fueron almacenados en MySQL.", "success").then(() => nav("/admin/productos"));
+    } catch (error) { Swal.fire("No se pudo guardar", error.message, "error"); }
   }
 
   return (

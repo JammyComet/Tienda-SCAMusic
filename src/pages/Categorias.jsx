@@ -1,5 +1,6 @@
 // Importa herramientas de React para guardar estado y reaccionar a cambios.
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 // Componentes de React-Bootstrap para el diseño y los recuadros seleccionables.
 import { Button, Col, Container, Row } from "react-bootstrap";
@@ -13,7 +14,11 @@ import { obtenerCategorias, obtenerProductos } from "../data/storage";
 
 // Esta función es la página completa de Categorías.
 export default function Categorias() {
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(null);
+  // La categoría vive en la URL, así el enlace desde Inicio abre directamente Rock, Pop, etc.
+  const { categoriaId } = useParams();
+  const navegar = useNavigate();
+  const categoriaSeleccionada = categoriaId == null ? null : Number(categoriaId);
+  const referenciaProductos = useRef(null);
 
   // Guardamos una versión para que React vuelva a dibujar la página
   // cuando cambien los productos o las categorías.
@@ -44,12 +49,19 @@ export default function Categorias() {
     .map((categoria) => ({
       ...categoria,
       productos: productosActivos.filter(
-        (producto) => producto.categoriaId === categoria.id
+        (producto) => Number(producto.categoriaId) === Number(categoria.id)
       ),
     }));
   const categoriaActual = categoriasConProductos.find(
-    (categoria) => categoria.id === categoriaSeleccionada
+    (categoria) => Number(categoria.id) === categoriaSeleccionada
   );
+
+  // Cuando se llega desde Inicio, mostrar la lista de la categoría seleccionada.
+  useEffect(() => {
+    if (categoriaSeleccionada !== null && categoriaActual && referenciaProductos.current) {
+      referenciaProductos.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [categoriaSeleccionada, Boolean(categoriaActual)]);
 
   // Define el contenido que aparecerá en pantalla.
   return (
@@ -72,7 +84,7 @@ export default function Categorias() {
                 border: categoriaSeleccionada === categoria.id ? "3px solid white" : "1px solid #555",
               }}
               aria-pressed={categoriaSeleccionada === categoria.id}
-              onClick={() => setCategoriaSeleccionada(categoria.id)}
+              onClick={() => navegar(`/categorias/${categoria.id}`)}
             >
               <span className="d-block fs-5 fw-bold">{categoria.nombre}</span>
               <span className="d-block small">
@@ -84,7 +96,7 @@ export default function Categorias() {
       </Row>
 
       {categoriaActual ? (
-        <section>
+        <section ref={referenciaProductos} style={{ scrollMarginTop: "6rem" }}>
           <h2 className="mb-4">{categoriaActual.nombre}</h2>
           {categoriaActual.productos.length > 0 ? (
             <ListaProductos productos={categoriaActual.productos} />

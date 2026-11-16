@@ -36,7 +36,7 @@ export default function Carrito() {
     });
     if (!confirmacion.isConfirmed) return;
 
-    const resultado = finalizarCompra(entrega);
+    const resultado = await finalizarCompra(entrega);
     if (!resultado.ok) {
       Swal.fire("No se pudo pagar", resultado.mensaje, "warning");
       return;

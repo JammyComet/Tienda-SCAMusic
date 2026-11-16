@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
-import { Card, Col, Form, Row, Tab, Tabs } from "react-bootstrap";
+import { Badge, Button, Card, Col, Form, Row, Tab, Tabs } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import GraficoBarras from "../../components/organisms/GraficoBarras";
 import TablaDatos from "../../components/organisms/TablaDatos";
 import TarjetaKpi from "../../components/molecules/TarjetaKpi";
-import { obtenerOrdenes, obtenerProductos } from "../../data/storage";
+import { obtenerNombreCategoria, obtenerOrdenes, obtenerProductos, obtenerResumenReportes, obtenerInventarioCritico } from "../../data/storage";
 import { calcularEstadisticas, obtenerRankingProductos, obtenerReporteProducto } from "../../utils/estadisticas";
 import { formatearFecha, formatearPrecio } from "../../utils/format";
 
@@ -18,7 +19,7 @@ export default function AdminReportes() {
 
   const ordenes = obtenerOrdenes();
   const productos = obtenerProductos();
-  const resumen = calcularEstadisticas(ordenes, productos);
+  const resumen = obtenerResumenReportes() || calcularEstadisticas(ordenes, productos);
   const ranking = obtenerRankingProductos(ordenes, productos);
   const rankingPorUnidades = [...ranking].sort((a, b) => b.unidades - a.unidades);
   const productoMasVendido = rankingPorUnidades.find((producto) => producto.unidades > 0);
@@ -26,6 +27,7 @@ export default function AdminReportes() {
     .filter((producto) => producto.unidades > 0)
     .slice(0, 6)
     .map((producto) => ({ etiqueta: producto.nombre, valor: producto.unidades }));
+  const productosCriticos = obtenerInventarioCritico();
 
   const [codigoSeleccionado, setCodigoSeleccionado] = useState(() => productos[0]?.codigo || "");
   const productoSeleccionado = useMemo(
@@ -154,6 +156,41 @@ export default function AdminReportes() {
               <Card.Body className="text-center text-secondary py-5">No hay productos registrados.</Card.Body>
             </Card>
           )}
+        </Tab>
+
+        <Tab eventKey="stock" title={`Stock crítico (${productosCriticos.length})`}>
+          <Row className="g-3 mb-4">
+            <Col sm={6} lg={4}>
+              <TarjetaKpi titulo="Productos en stock crítico" valor={productosCriticos.length} subtitulo="Requieren reposición" icono="bi-exclamation-triangle" />
+            </Col>
+          </Row>
+
+          <Card className="border-0 shadow-sm">
+            <Card.Body>
+              <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                <div>
+                  <h3 className="h5 fw-bold text-dark mb-1">Reporte de stock crítico</h3>
+                  <p className="text-secondary mb-0">Se muestran productos cuyo stock actual es igual o menor a su límite crítico.</p>
+                </div>
+                <Button as={Link} to="/admin/productos" variant="outline-dark">Ir a productos</Button>
+              </div>
+              <TablaDatos
+                columnas={["Código", "Producto", "Categoría", "Stock actual", "Límite crítico", "Estado"]}
+                filas={productosCriticos}
+                mensajeVacio="No hay productos con stock crítico."
+                renderFila={(producto) => (
+                  <tr key={producto.codigo}>
+                    <td>{producto.codigo}</td>
+                    <td><strong>{producto.nombre}</strong><div className="small text-secondary">{producto.artista}</div></td>
+                    <td>{obtenerNombreCategoria(producto.categoriaId)}</td>
+                    <td>{producto.stock}</td>
+                    <td>{producto.stockCritico}</td>
+                    <td><Badge bg={Number(producto.stock) === 0 ? "danger" : "warning"} text={Number(producto.stock) === 0 ? undefined : "dark"}>{Number(producto.stock) === 0 ? "Sin stock" : "Crítico"}</Badge></td>
+                  </tr>
+                )}
+              />
+            </Card.Body>
+          </Card>
         </Tab>
       </Tabs>
     </section>

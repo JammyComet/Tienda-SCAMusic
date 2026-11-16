@@ -1039,3 +1039,121 @@ footer a { color:white; text-decoration:none; }
 }
 
 
+
+.product-card {
+    border: 2px solid #ffffff !important;
+    border-radius: 14px !important;
+    overflow: hidden;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .16) !important;
+}
+
+.home-marketplace {
+    background: #f4f4f4;
+}
+
+.home-hero-section {
+    background: #ececec;
+}
+
+.home-main-carousel {
+    border-radius: 18px;
+    overflow: hidden;
+    background: #111;
+}
+
+.home-banner {
+    position: relative;
+    min-height: 410px;
+    overflow: hidden;
+}
+
+.home-banner-image {
+    width: 100%;
+    height: 410px;
+    object-fit: cover;
+    display: block;
+}
+
+.home-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(0,0,0,.82) 0%, rgba(0,0,0,.55) 46%, rgba(0,0,0,.12) 100%);
+}
+
+.home-banner-content {
+    position: absolute;
+    z-index: 2;
+    top: 50%;
+    left: clamp(24px, 6vw, 86px);
+    transform: translateY(-50%);
+    width: min(620px, 72%);
+    color: white;
+}
+
+.home-banner-kicker {
+    text-transform: uppercase;
+    letter-spacing: .22em;
+    font-weight: 800;
+    color: #f3b6ef;
+}
+
+.home-categories,
+.home-product-section {
+    background: #fff;
+}
+
+.home-product-section-alt {
+    background: #f4f4f4;
+}
+
+.home-category-card {
+    min-height: 120px;
+    padding: 18px 12px;
+    border-radius: 16px;
+    background: white;
+    border: 1px solid #dedede;
+    color: #111;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    text-align: center;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.home-category-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,.09);
+    border-color: #c642ca;
+    color: #111;
+}
+
+.home-category-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #111;
+    color: white;
+    font-size: 22px;
+}
+
+@media (max-width: 767.98px) {
+    .home-banner,
+    .home-banner-image {
+        min-height: 360px;
+        height: 360px;
+    }
+
+    .home-banner-content {
+        width: calc(100% - 48px);
+        left: 24px;
+    }
+
+    .home-banner-content .display-5 {
+        font-size: 2rem;
+    }
+}

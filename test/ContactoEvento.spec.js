@@ -1,11 +1,15 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import Swal from "sweetalert2";
 import Contacto from "../src/pages/Contacto.jsx";
 
 describe("Prueba de Eventos - Contacto", function () {
 
+  // La persistencia se realiza en Spring Boot: las pruebas simulan la respuesta HTTP.
   beforeEach(function () {
-    localStorage.clear();
+    spyOn(window, "fetch").and.returnValue(Promise.resolve({
+      ok: true, status: 201, headers: { get: () => null },
+      text: async () => JSON.stringify({ id: 10 })
+    }));
   });
 
   it("debe marcar el formulario como invalido al enviar datos invalidos", function () {
@@ -29,7 +33,7 @@ describe("Prueba de Eventos - Contacto", function () {
 
   });
 
-  it("debe enviar el formulario cuando los datos son validos", function () {
+  it("debe enviar el formulario cuando los datos son validos", async function () {
 
     spyOn(Swal, "fire").and.returnValue(Promise.resolve());
 
@@ -43,11 +47,12 @@ describe("Prueba de Eventos - Contacto", function () {
 
     fireEvent.click(screen.getByRole("button", { name: "Enviar" }));
 
-    expect(Swal.fire).toHaveBeenCalledOnceWith(
+    await waitFor(() => expect(Swal.fire).toHaveBeenCalledWith(
       "Mensaje enviado",
       "Gracias por escribirnos, te responderemos pronto.",
       "success"
-    );
+    ));
+    expect(window.fetch).toHaveBeenCalled();
     expect(campos[0].classList.contains("is-invalid")).toBeFalse();
 
   });

@@ -17,7 +17,7 @@ export default function Productos() {
   }, []);
 
   const productos = obtenerProductos().filter((producto) => {
-    const coincideTexto = producto.nombre.toLowerCase().includes(texto.toLowerCase()) || producto.artista.toLowerCase().includes(texto.toLowerCase());
+    const coincideTexto = String(producto.nombre || '').toLowerCase().includes(texto.toLowerCase()) || String(producto.artista || '').toLowerCase().includes(texto.toLowerCase());
     const coincideCategoria = !categoria || producto.categoriaId === Number(categoria);
     return producto.estado === "Activo" && coincideTexto && coincideCategoria;
   });

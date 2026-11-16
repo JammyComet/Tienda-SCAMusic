@@ -12,7 +12,12 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
 import { inicializarDatos } from "./data/storage.js";
 
-inicializarDatos();
+try {
+  await inicializarDatos();
+} catch (error) {
+  document.getElementById("root").textContent = `No se pudo conectar con Spring Boot: ${error.message}. Comprueba los servicios del backend y vuelve a cargar la página.`;
+  throw error;
+}
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

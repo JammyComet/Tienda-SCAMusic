@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Button, Card, Col, Form, Row } from "react-bootstrap";
+import { Alert, Button, Card, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import { existeCorreo, existeRun, guardarUsuario, obtenerUsuarios } from "../../data/storage";
+import { esAdministradorPrincipal, existeCorreo, existeRun, guardarUsuario, obtenerUsuarios } from "../../data/storage";
 import { REGIONES } from "../../data/regiones";
+import { useAuth } from "../../hooks/useAuth";
 import { textoRequerido, validarCorreo, validarNombre, validarPassword, validarRut, validarTelefono } from "../../utils/validaciones";
 
 const vacio = {
@@ -19,16 +20,20 @@ const vacio = {
   comuna: "",
   direccion: "",
   rol: "Cliente",
+  activo: true,
 };
 
 export default function AdminUsuarioForm() {
   const { correo } = useParams();
   const original = correo ? obtenerUsuarios().find((usuario) => usuario.correo === decodeURIComponent(correo)) : null;
-  const [formulario, setFormulario] = useState(original ? { ...vacio, ...original, confirmar: original.contrasena } : vacio);
+  const [formulario, setFormulario] = useState(original ? { ...vacio, ...original, contrasena: "", confirmar: "" } : vacio);
   const [validado, setValidado] = useState(false);
   const [duplicado, setDuplicado] = useState({ correo: false, run: false });
   const navigate = useNavigate();
+  const { usuario: usuarioActual } = useAuth();
   const esCliente = formulario.rol === "Cliente";
+  const esEdicion = Boolean(original);
+  const rolBloqueado = esEdicion && (original.correo === usuarioActual?.correo || esAdministradorPrincipal(original.correo));
 
   function set(campo, valor) {
     setFormulario((actual) => ({ ...actual, [campo]: valor, ...(campo === "region" ? { comuna: "" } : {}) }));
@@ -41,8 +46,8 @@ export default function AdminUsuarioForm() {
     apellidos: !validarNombre(formulario.apellidos, 100),
     correo: !validarCorreo(formulario.correo),
     fechaNacimiento: !formulario.fechaNacimiento,
-    contrasena: !validarPassword(formulario.contrasena),
-    confirmar: formulario.confirmar !== formulario.contrasena || !formulario.confirmar,
+    contrasena: !esEdicion && !validarPassword(formulario.contrasena),
+    confirmar: !esEdicion && (formulario.confirmar !== formulario.contrasena || !formulario.confirmar),
     telefono: !validarTelefono(formulario.telefono),
     rol: !["Cliente", "Vendedor", "Administrador"].includes(formulario.rol),
     region: esCliente && !formulario.region,
@@ -50,7 +55,7 @@ export default function AdminUsuarioForm() {
     direccion: esCliente && !textoRequerido(formulario.direccion, 300),
   };
 
-  function submit(evento) {
+  async function submit(evento) {
     evento.preventDefault();
     setValidado(true);
     setDuplicado({ correo: false, run: false });
@@ -60,8 +65,8 @@ export default function AdminUsuarioForm() {
       return;
     }
 
-    const correoNormalizado = formulario.correo.trim().toLowerCase();
-    if (existeCorreo(correoNormalizado, original?.correo)) {
+    const correoNormalizado = esEdicion ? original.correo : formulario.correo.trim().toLowerCase();
+    if (!esEdicion && existeCorreo(correoNormalizado)) {
       setDuplicado((actual) => ({ ...actual, correo: true }));
       Swal.fire("Correo registrado", "Este correo ya está registrado.", "error");
       return;
@@ -72,10 +77,19 @@ export default function AdminUsuarioForm() {
       return;
     }
 
-    const usuario = { ...formulario, correo: correoNormalizado };
+    const usuario = {
+      ...formulario,
+      correo: correoNormalizado,
+      contrasena: esEdicion ? undefined : formulario.contrasena,
+      rol: rolBloqueado ? original.rol : formulario.rol,
+      activo: original ? original.activo !== false : true,
+    };
     delete usuario.confirmar;
-    guardarUsuario(usuario, original?.correo);
-    Swal.fire("Usuario guardado", "Los datos fueron almacenados.", "success").then(() => navigate("/admin/usuarios"));
+
+    try {
+      await guardarUsuario(usuario, original?.correo);
+      Swal.fire("Usuario guardado", "Los datos fueron almacenados en MySQL.", "success").then(() => navigate("/admin/usuarios"));
+    } catch (error) { Swal.fire("No se pudo guardar", error.message, "error"); }
   }
 
   return (
@@ -86,6 +100,11 @@ export default function AdminUsuarioForm() {
       </div>
       <Card>
         <Card.Body>
+          {esEdicion && (
+            <Alert variant="light" className="border">
+              La contraseña no se modifica desde administración. Cada cliente puede cambiar su propia contraseña desde Mi perfil.
+            </Alert>
+          )}
           <Form onSubmit={submit}>
             <Row className="g-3">
               <Col md={6}>
@@ -96,12 +115,13 @@ export default function AdminUsuarioForm() {
 
               <Col md={6}>
                 <Form.Label>Rol</Form.Label>
-                <Form.Select value={formulario.rol} onChange={(e) => set("rol", e.target.value)} isInvalid={validado && errores.rol}>
+                <Form.Select value={formulario.rol} onChange={(e) => set("rol", e.target.value)} isInvalid={validado && errores.rol} disabled={rolBloqueado}>
                   <option>Cliente</option>
                   <option>Vendedor</option>
                   <option>Administrador</option>
                 </Form.Select>
                 <Form.Control.Feedback type="invalid">Selecciona un rol válido.</Form.Control.Feedback>
+                {rolBloqueado && <Form.Text>El administrador principal y la cuenta actualmente conectada no pueden cambiar su propio rol.</Form.Text>}
               </Col>
 
               <Col md={6}>
@@ -118,8 +138,9 @@ export default function AdminUsuarioForm() {
 
               <Col md={6}>
                 <Form.Label>Correo</Form.Label>
-                <Form.Control type="email" value={formulario.correo} onChange={(e) => set("correo", e.target.value)} isInvalid={(validado && errores.correo) || duplicado.correo} />
+                <Form.Control type="email" value={formulario.correo} onChange={(e) => set("correo", e.target.value)} isInvalid={(validado && errores.correo) || duplicado.correo} disabled={esEdicion} />
                 <Form.Control.Feedback type="invalid">{duplicado.correo ? "Este correo ya está registrado." : "Ingresa un correo válido."}</Form.Control.Feedback>
+                {esEdicion && <Form.Text>El correo se mantiene fijo para no perder la relación con compras y boletas.</Form.Text>}
               </Col>
 
               <Col md={6}>
@@ -128,17 +149,21 @@ export default function AdminUsuarioForm() {
                 <Form.Control.Feedback type="invalid">Selecciona la fecha de nacimiento.</Form.Control.Feedback>
               </Col>
 
-              <Col md={6}>
-                <Form.Label>Contraseña</Form.Label>
-                <Form.Control type="password" value={formulario.contrasena} onChange={(e) => set("contrasena", e.target.value)} isInvalid={validado && errores.contrasena} />
-                <Form.Control.Feedback type="invalid">La contraseña debe tener entre 4 y 10 caracteres.</Form.Control.Feedback>
-              </Col>
+              {!esEdicion && (
+                <>
+                  <Col md={6}>
+                    <Form.Label>Contraseña</Form.Label>
+                    <Form.Control type="password" value={formulario.contrasena} onChange={(e) => set("contrasena", e.target.value)} isInvalid={validado && errores.contrasena} />
+                    <Form.Control.Feedback type="invalid">La contraseña debe tener entre 8 y 72 caracteres.</Form.Control.Feedback>
+                  </Col>
 
-              <Col md={6}>
-                <Form.Label>Confirmar contraseña</Form.Label>
-                <Form.Control type="password" value={formulario.confirmar} onChange={(e) => set("confirmar", e.target.value)} isInvalid={validado && errores.confirmar} />
-                <Form.Control.Feedback type="invalid">Las contraseñas deben coincidir.</Form.Control.Feedback>
-              </Col>
+                  <Col md={6}>
+                    <Form.Label>Confirmar contraseña</Form.Label>
+                    <Form.Control type="password" value={formulario.confirmar} onChange={(e) => set("confirmar", e.target.value)} isInvalid={validado && errores.confirmar} />
+                    <Form.Control.Feedback type="invalid">Las contraseñas deben coincidir.</Form.Control.Feedback>
+                  </Col>
+                </>
+              )}
 
               <Col md={6}>
                 <Form.Label>Teléfono</Form.Label>

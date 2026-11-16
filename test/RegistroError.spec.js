@@ -1,11 +1,15 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import Swal from "sweetalert2";
 import Registro from "../src/pages/Registro.jsx";
 
 describe("Prueba de Renderizado Condicional - Registro", function () {
 
+  // La persistencia se realiza en Spring Boot: las pruebas simulan la respuesta HTTP.
   beforeEach(function () {
-    localStorage.clear();
+    spyOn(window, "fetch").and.returnValue(Promise.resolve({
+      ok: true, status: 201, headers: { get: () => null },
+      text: async () => JSON.stringify({ id: 10 })
+    }));
   });
 
   it("debe mostrar un mensaje de error cuando los datos son invalidos", function () {
@@ -26,7 +30,7 @@ describe("Prueba de Renderizado Condicional - Registro", function () {
 
   });
 
-  it("debe registrar al usuario cuando los datos son validos", function () {
+  it("debe registrar al usuario cuando los datos son validos", async function () {
 
     spyOn(Swal, "fire").and.returnValue(Promise.resolve());
 
@@ -48,11 +52,12 @@ describe("Prueba de Renderizado Condicional - Registro", function () {
 
     fireEvent.click(screen.getByRole("button", { name: "Registrar usuario" }));
 
-    expect(Swal.fire).toHaveBeenCalledOnceWith(
+    await waitFor(() => expect(Swal.fire).toHaveBeenCalledWith(
       "Registro exitoso",
       "El usuario fue registrado correctamente.",
       "success"
-    );
+    ));
+    expect(window.fetch).toHaveBeenCalled();
 
     expect(Swal.fire).not.toHaveBeenCalledWith(
       "Revisa el formulario",

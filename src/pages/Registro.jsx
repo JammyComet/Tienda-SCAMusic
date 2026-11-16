@@ -39,7 +39,7 @@ export default function Registro() {
     direccion: !textoRequerido(f.direccion, 300)
   };
 
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault();
     setValidado(true);
 
@@ -60,7 +60,7 @@ export default function Registro() {
       return;
     }
 
-    guardarUsuario({
+    try { await guardarUsuario({
       run: f.run.trim(),
       nombre: f.nombre.trim(),
       apellidos: f.apellidos.trim(),
@@ -71,9 +71,13 @@ export default function Registro() {
       region: f.region,
       comuna: f.comuna,
       direccion: f.direccion.trim(),
-      rol: "Cliente"
+      rol: "Cliente",
+      activo: true
     });
-
+    } catch (error) {
+      Swal.fire("No se pudo registrar", error.message, "error");
+      return;
+    }
     Swal.fire("Registro exitoso", "El usuario fue registrado correctamente.", "success");
     setF(inicial);
     setValidado(false);
@@ -159,7 +163,7 @@ export default function Registro() {
                     onChange={(e) => set("contrasena", e.target.value)}
                     isInvalid={validado && errores.contrasena}
                   />
-                  <Form.Control.Feedback type="invalid">La contraseña debe tener entre 4 y 10 caracteres.</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">La contraseña debe tener entre 8 y 72 caracteres.</Form.Control.Feedback>
                 </Col>
 
                 <Col md={6}>

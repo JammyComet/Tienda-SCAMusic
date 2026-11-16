@@ -25,7 +25,8 @@ export default function AdminProductos() {
     });
 
     if (resultado.isConfirmed) {
-      eliminarProducto(codigo);
+      try { await eliminarProducto(codigo); }
+      catch (error) { Swal.fire("No se pudo eliminar", error.message, "error"); }
     }
   }
 

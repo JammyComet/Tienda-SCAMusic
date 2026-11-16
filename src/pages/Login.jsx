@@ -3,7 +3,7 @@ import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useAuth } from "../hooks/useAuth.js";
-import { validarCorreo, validarPassword } from "../utils/validaciones.js";
+import { validarCorreo } from "../utils/validaciones.js";
 
 export default function Login() {
   const [correo, setCorreo] = useState("");
@@ -16,10 +16,10 @@ export default function Login() {
 
   const errores = {
     correo: !validarCorreo(correo),
-    pass: !validarPassword(pass),
+    pass: !pass,
   };
 
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault();
     setValidado(true);
     setCredencialesInvalidas(false);
@@ -29,16 +29,14 @@ export default function Login() {
       return;
     }
 
-    const u = login(correo, pass);
-    if (!u) {
+    try {
+      const u = await login(correo, pass);
+      await Swal.fire("Inicio de sesión", "Autenticación validada en Spring Boot.", "success");
+      nav(loc.state?.desde || (u.rol === "Administrador" ? "/admin" : u.rol === "Vendedor" ? "/vendedor/productos" : "/"));
+    } catch (error) {
       setCredencialesInvalidas(true);
-      Swal.fire("Datos incorrectos", "El correo o la contraseña no coinciden.", "error");
-      return;
+      Swal.fire("No se pudo iniciar sesión", error.status === 401 ? "Credenciales inválidas o cuenta desactivada." : error.message, "error");
     }
-
-    Swal.fire("Inicio de sesión", "Los datos son válidos.", "success").then(() =>
-      nav(loc.state?.desde || (u.rol === "Administrador" ? "/admin" : u.rol === "Vendedor" ? "/vendedor" : "/"))
-    );
   }
 
   return (
@@ -77,9 +75,9 @@ export default function Login() {
                   isInvalid={(validado && errores.pass) || credencialesInvalidas}
                 />
                 <Form.Control.Feedback type="invalid">
-                  {credencialesInvalidas ? "El correo o la contraseña no coinciden." : "La contraseña debe tener entre 4 y 10 caracteres."}
+                  {credencialesInvalidas ? "El correo o la contraseña no coinciden." : "Ingresa tu contraseña."}
                 </Form.Control.Feedback>
-                <Form.Text>Entre 4 y 10 caracteres.</Form.Text>
+                <Form.Text>Ingresa tu contraseña para acceder.</Form.Text>
               </Form.Group>
 
               <Button type="submit" variant="dark" className="w-100">Iniciar sesión</Button>

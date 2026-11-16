@@ -3,7 +3,7 @@ export function calcularEstadisticas(ordenes, productos, usuarios = []) {
   const ventasTotales = ordenesPagadas.reduce((total, orden) => total + Number(orden.total || 0), 0);
   const unidadesVendidas = ordenesPagadas.reduce((total, orden) => total + orden.productos.reduce((suma, producto) => suma + Number(producto.cantidad || 0), 0), 0);
   const productosActivos = productos.filter((producto) => producto.estado === "Activo").length;
-  const stockCritico = productos.filter((producto) => Number(producto.stock) <= Number(producto.stockCritico ?? 0)).length;
+  const stockCritico = productos.filter((producto) => producto.stockCritico !== null && producto.stockCritico !== "" && Number(producto.stock) <= Number(producto.stockCritico)).length;
   return { ventasTotales, ordenesPagadas: ordenesPagadas.length, unidadesVendidas, productosActivos, stockCritico, usuarios: usuarios.length };
 }
 

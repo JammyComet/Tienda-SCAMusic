@@ -9,9 +9,10 @@ export default function NavBar() {
   const { totalItems } = useCart();
   const navigate = useNavigate();
   const clase = ({ isActive }) => `nav-link${isActive ? " active" : ""}`;
+  const esCliente = usuario?.rol === "Cliente";
 
-  function salir() {
-    logout();
+  async function salir() {
+    await logout();
     navigate("/");
   }
 
@@ -31,8 +32,10 @@ export default function NavBar() {
                 <NavLink to="/registro" className="btn btn-dark btn-sm">Registrarse</NavLink>
               </Nav>
             ) : (
-              <Nav className="site-header-account align-items-center justify-content-lg-end gap-2">
+              <Nav className="site-header-account align-items-center justify-content-lg-end gap-2 flex-wrap">
                 <span className="small">👤 {obtenerNombreUsuario(usuario)} · {usuario.rol}</span>
+                {esCliente && <NavLink to="/perfil" className="btn btn-outline-secondary btn-sm">Mi perfil</NavLink>}
+                {esCliente && <NavLink to="/mis-boletas" className="btn btn-outline-secondary btn-sm">Mis boletas</NavLink>}
                 <Button size="sm" variant="outline-danger" onClick={salir}>Salir</Button>
               </Nav>
             )}

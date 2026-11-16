@@ -10,11 +10,11 @@ export default function Contacto() {
 
   const errores = {
     nombre: !validarNombre(f.nombre, 100),
-    correo: Boolean(f.correo) && !validarCorreo(f.correo),
+    correo: !validarCorreo(f.correo),
     comentario: !textoRequerido(f.comentario, 500),
   };
 
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault();
     setValidado(true);
 
@@ -23,12 +23,13 @@ export default function Contacto() {
       return;
     }
 
-    guardarContacto({
+    try { await guardarContacto({
       nombre: f.nombre.trim(),
       correo: f.correo.trim().toLowerCase(),
       comentario: f.comentario.trim(),
       fecha: new Date().toISOString().slice(0, 10),
     });
+    } catch (error) { Swal.fire("No se pudo enviar", error.message, "error"); return; }
     Swal.fire("Mensaje enviado", "Gracias por escribirnos, te responderemos pronto.", "success");
     setF({ nombre: "", correo: "", comentario: "" });
     setValidado(false);
@@ -51,14 +52,14 @@ export default function Contacto() {
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Correo (opcional)</Form.Label>
+              <Form.Label>Correo</Form.Label>
               <Form.Control
                 type="email"
                 value={f.correo}
                 onChange={(e) => setF({ ...f, correo: e.target.value })}
                 isInvalid={validado && errores.correo}
               />
-              <Form.Control.Feedback type="invalid">Ingresa un correo válido o deja este campo vacío.</Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">Ingresa un correo válido.</Form.Control.Feedback>
             </Form.Group>
 
             <Form.Group className="mb-4">
