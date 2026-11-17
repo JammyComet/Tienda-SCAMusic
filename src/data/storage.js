@@ -205,14 +205,25 @@ export async function eliminarUsuario(correo){
 export async function subirImagenProducto(archivo){
   const datosImagen=new FormData();
   datosImagen.append('archivo',archivo);
-  const respuesta=await api('/api/v1/productos/imagenes',{method:'POST',body:datosImagen});
-  if(!respuesta?.imagen) throw new Error('No se pudo guardar la imagen. Inténtalo nuevamente.');
+  let respuesta;
+  try {
+    respuesta=await api('/api/v1/productos/imagenes',{method:'POST',body:datosImagen});
+  } catch(error) {
+    // La vista previa es local; la portada solo está guardada cuando el servidor
+    // devuelve su referencia. Distinguir esta operación del guardado del disco.
+    if(error?.status>=500) throw new Error('No se pudo subir la portada. Inténtalo nuevamente.');
+    throw error;
+  }
+  if(!respuesta?.imagen) throw new Error('No se pudo subir la portada. Inténtalo nuevamente.');
   return respuesta.imagen;
 }
 export async function guardarProducto(producto,codigoOriginal=null){
   const ruta=codigoOriginal?`/api/v1/productos/${encodeURIComponent(codigoOriginal)}`:'/api/v1/productos';
   const guardado=await api(ruta,{method:codigoOriginal?'PUT':'POST',body:JSON.stringify(producto)});
-  guardarDatos('productos',await api('/api/v1/productos'));
+  // Un fallo al actualizar la lista no debe ocultar que MySQL guardó el disco:
+  // así evitamos que el administrador cree el mismo producto varias veces.
+  try { guardarDatos('productos',await api('/api/v1/productos')); }
+  catch(error) { console.warn('Producto guardado; no se pudo actualizar la lista.',error); }
   return Boolean(guardado);
 }
 export async function eliminarProducto(codigo){await api(`/api/v1/productos/${encodeURIComponent(codigo)}`,{method:'DELETE'});guardarDatos('productos',await api('/api/v1/productos'));}
