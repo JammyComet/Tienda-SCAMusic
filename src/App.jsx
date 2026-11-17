@@ -32,6 +32,7 @@ import AdminDetalleBoleta from "./pages/admin/AdminDetalleBoleta";
 import AdminReportes from "./pages/admin/AdminReportes";
 import VendedorPanel from "./pages/vendedor/VendedorPanel";
 import VendedorProductos from "./pages/vendedor/VendedorProductos";
+import VendedorDetalleProducto from "./pages/vendedor/VendedorDetalleProducto";
 import VendedorOrdenes from "./pages/vendedor/VendedorOrdenes";
 import VendedorDetalleOrden from "./pages/vendedor/VendedorDetalleOrden";
 import Categorias from "./pages/Categorias";
@@ -87,6 +88,7 @@ export default function App() {
         <Route element={<AdminLayout modo="vendedor" />}>
           <Route path="/vendedor" element={<Navigate to="/vendedor/productos" replace />} />
           <Route path="/vendedor/productos" element={<VendedorProductos />} />
+          <Route path="/vendedor/productos/:codigo" element={<VendedorDetalleProducto />} />
           <Route path="/vendedor/ordenes" element={<VendedorOrdenes />} />
           <Route path="/vendedor/ordenes/:codigo" element={<VendedorDetalleOrden />} />
         </Route>

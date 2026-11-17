@@ -12,7 +12,6 @@ export default function VendedorProductos() {
       <div className="mb-4">
         <p className="text-secondary mb-1">Vendedor</p>
         <h2 className="fw-bold">Productos</h2>
-        <p className="text-secondary">Vista solo de consulta.</p>
       </div>
       <Card>
         <Card.Body>
@@ -28,7 +27,7 @@ export default function VendedorProductos() {
                 <td>{obtenerNombreCategoria(producto.categoriaId)}</td>
                 <td>{producto.estado}</td>
                 <td>
-                  <Button as={Link} to={`/productos/${producto.codigo}`} size="sm" variant="outline-dark">
+                  <Button as={Link} to={`/vendedor/productos/${encodeURIComponent(producto.codigo)}`} size="sm" variant="outline-dark">
                     Ver
                   </Button>
                 </td>

@@ -12,7 +12,6 @@ export default function VendedorOrdenes() {
       <div className="mb-4">
         <p className="text-secondary mb-1">Vendedor</p>
         <h2 className="fw-bold">Órdenes</h2>
-        <p className="text-secondary">Listado de todas las compras registradas desde el carrito.</p>
       </div>
       <Card>
         <Card.Body>
