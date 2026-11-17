@@ -1,4 +1,5 @@
 import { Button, Col, Container, Row } from "react-bootstrap";
+import { useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import { obtenerNombreCategoria, obtenerProductoPorCodigo } from "../data/storage";
@@ -11,6 +12,7 @@ export default function ProductoDetalle() {
   const codigo = parametro || searchParams.get("codigo");
   const producto = obtenerProductoPorCodigo(codigo);
   const { agregar } = useCart();
+  const [agregando, setAgregando] = useState(false);
 
   if (!producto) {
     return (
@@ -25,12 +27,16 @@ export default function ProductoDetalle() {
   const enOferta = Number(producto.descuento) > 0;
   const precioFinal = precioConDescuento(producto);
 
-  function add() {
-    const resultado = agregar(producto.codigo);
-    Swal.fire({
-      icon: resultado.ok ? "success" : "warning",
-      title: resultado.ok ? "Producto agregado" : resultado.mensaje,
-    });
+  async function add() {
+    if (agregando) return;
+    setAgregando(true);
+    try {
+      const resultado = await agregar(producto.codigo);
+      await Swal.fire({
+        icon: resultado.ok ? "success" : "warning",
+        title: resultado.ok ? "Producto agregado" : resultado.mensaje,
+      });
+    } finally { setAgregando(false); }
   }
 
   return (
@@ -52,7 +58,7 @@ export default function ProductoDetalle() {
           </h2>
           <p>{producto.descripcion}</p>
           <div className="d-flex gap-2">
-            <Button variant="dark" onClick={add}>Añadir al carrito</Button>
+            <Button variant="dark" onClick={add} disabled={agregando}>{agregando ? "Agregando..." : "Añadir al carrito"}</Button>
             <Button as={Link} variant="outline-dark" to="/productos">Volver</Button>
           </div>
         </Col>

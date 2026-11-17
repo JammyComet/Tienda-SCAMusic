@@ -29,7 +29,7 @@ export function CartProvider({children}){
     window.addEventListener('scamusic-data',fn);
     return()=>window.removeEventListener('scamusic-data',fn);
   },[usuario]);
-  async function persistir(nuevo){
+  async function persistir(nuevo, mostrarError=true){
     const idUsuario=usuario?.id ?? null;
     const version=++versionCambio.current;
     peticionesPendientes.current++;
@@ -38,7 +38,7 @@ export function CartProvider({children}){
     catch(e){
       if(idUsuario===usuarioActualId.current){
         if(version===versionCambio.current)actualizarVista(obtenerCarrito(usuario));
-        Swal.fire('Error de conexión',e.message,'error');
+        if(mostrarError)Swal.fire('No se pudo guardar el carrito',e.message,'error');
       }
       throw e;
     } finally {
@@ -48,14 +48,17 @@ export function CartProvider({children}){
       }
     }
   }
-  function agregar(codigo){
+  async function agregar(codigo){
     const producto=obtenerProductos().find(p=>p.codigo===codigo);
     if(!producto || producto.estado!=='Activo')return {ok:false,mensaje:'El producto no está disponible.'};
     if(producto.stock<=0)return {ok:false,mensaje:'Este producto no tiene stock.'};
     const nuevo=carritoActual.current.map(i=>({...i}));const existente=nuevo.find(i=>i.codigo===codigo);
     if(existente){if(existente.cantidad>=producto.stock)return {ok:false,mensaje:'No hay más stock disponible.'};existente.cantidad++;}
     else nuevo.push({codigo,cantidad:1});
-    void persistir(nuevo).catch(()=>{});return {ok:true};
+    // Confirmar al usuario solo cuando MySQL haya guardado el cambio.
+    // Si la API falla, persistir restaura el último carrito confirmado.
+    try{await persistir(nuevo,false);return {ok:true};}
+    catch(e){return {ok:false,mensaje:e.message};}
   }
   function cambiarCantidad(codigo,cantidad){
     const p=obtenerProductos().find(x=>x.codigo===codigo),nuevo=carritoActual.current.map(x=>({...x}));

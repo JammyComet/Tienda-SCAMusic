@@ -1,4 +1,5 @@
 import { Button, Card } from "react-bootstrap";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { obtenerNombreCategoria } from "../../data/storage";
@@ -9,16 +10,21 @@ import Precio from "../atoms/Precio";
 
 export default function TarjetaProducto({ producto }) {
   const { agregar } = useCart();
+  const [agregando, setAgregando] = useState(false);
   const enOferta = Number(producto.descuento) > 0;
   const precioFinal = precioConDescuento(producto);
 
-  function agregarAlCarrito() {
-    const resultado = agregar(producto.codigo);
-    Swal.fire({
-      icon: resultado.ok ? "success" : "warning",
-      title: resultado.ok ? "Producto agregado" : resultado.mensaje,
-      showConfirmButton: true,
-    });
+  async function agregarAlCarrito() {
+    if (agregando) return;
+    setAgregando(true);
+    try {
+      const resultado = await agregar(producto.codigo);
+      await Swal.fire({
+        icon: resultado.ok ? "success" : "warning",
+        title: resultado.ok ? "Producto agregado" : resultado.mensaje,
+        showConfirmButton: true,
+      });
+    } finally { setAgregando(false); }
   }
 
   return (
@@ -36,7 +42,7 @@ export default function TarjetaProducto({ producto }) {
         <p className="small text-secondary">Stock: {producto.stock}</p>
         <div className="mt-auto d-flex gap-2 flex-wrap">
           <Button as={Link} to={`/productos/${encodeURIComponent(producto.codigo)}`} variant="outline-dark">Ver detalle</Button>
-          <Button variant="dark" onClick={agregarAlCarrito}>Añadir al carrito</Button>
+          <Button variant="dark" onClick={agregarAlCarrito} disabled={agregando}>{agregando ? "Agregando..." : "Añadir al carrito"}</Button>
         </div>
       </Card.Body>
     </Card>
