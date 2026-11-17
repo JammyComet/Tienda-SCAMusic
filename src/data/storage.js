@@ -20,7 +20,7 @@ function limpiarLocalmente(){
   datos.inventarioCritico=[];carritos.delete('usuario');emitirCambio();
 }
 function aceptarToken(respuesta){
-  if(!respuesta?.token) throw new Error('El servidor no entregó JWT de acceso');
+  if(!respuesta?.token) throw new Error('No pudimos iniciar tu sesión. Inténtalo nuevamente.');
   accessToken=respuesta.token;
   venceTokenEn=Date.now()+Number(respuesta.expiresIn || 300)*1000;
 }
@@ -29,11 +29,27 @@ async function realizar(ruta,opciones={},token=null){
   if(token)headers.Authorization=`Bearer ${token}`;
   let respuesta;
   try{respuesta=await fetch(`${API}${ruta}`,{...opciones,credentials:'include',headers});}
-  catch{throw new Error('No se pudo conectar con Spring Boot. Comprueba MySQL, Eureka, los microservicios y el Gateway (puerto 8080).');}
+  catch{throw new Error('No pudimos conectar con la tienda. Comprueba tu conexión e inténtalo nuevamente.');}
   if(!respuesta.ok){
     let info;try{info=await respuesta.json();}catch{info=null;}
-    const error=new Error(info?.detail || info?.message || info?.error || `Error HTTP ${respuesta.status}`);
-    error.status=respuesta.status;throw error;
+    const detalle = typeof info?.detail === 'string' ? info.detail :
+      typeof info?.message === 'string' ? info.message : '';
+    let mensaje;
+    if (respuesta.status === 401) mensaje = 'Tu sesión no es válida o ha expirado. Inicia sesión nuevamente.';
+    else if (respuesta.status === 403) mensaje = 'No tienes permiso para realizar esta acción.';
+    else if (respuesta.status === 404) mensaje = 'No encontramos lo que buscas.';
+    else if (respuesta.status >= 500) mensaje = 'Tuvimos un problema al procesar tu solicitud. Inténtalo nuevamente.';
+    else if (respuesta.status === 400 && /contrase(?:ñ|n)a actual incorrecta/i.test(detalle))
+      mensaje = 'La contraseña actual no coincide con la de tu cuenta.';
+    else if (respuesta.status === 400 && /nueva contrase(?:ñ|n)a debe tener/i.test(detalle))
+      mensaje = 'La nueva contraseña debe tener entre 8 y 72 caracteres.';
+    else if (respuesta.status === 409 && /run duplicado/i.test(detalle)) mensaje = 'Ese RUN ya está registrado.';
+    else if (respuesta.status === 409 && /correo ya registrado/i.test(detalle)) mensaje = 'Ese correo ya está registrado.';
+    else mensaje = detalle && !/exception|java\.|org\.|stacktrace|http \d{3}|internal server error/i.test(detalle)
+      ? detalle : 'No se pudo completar la solicitud. Revisa los datos e inténtalo nuevamente.';
+    const error = new Error(mensaje);
+    error.status = respuesta.status;
+    throw error;
   }
   if(respuesta.status===204 || respuesta.headers.get('content-length')==='0')return null;
   const texto=await respuesta.text();return texto?JSON.parse(texto):null;
@@ -233,7 +249,7 @@ export async function guardarCarrito(items,usuario=sesion){
   if(!usuario){carritos.set(clave,copia);emitirCambio();return;}
   const idUsuario=usuario.id;
   const datosEnviar=copia.map(i=>({productoId:obtenerProductoPorCodigo(i.codigo)?.id,cantidad:i.cantidad}));
-  if(datosEnviar.some(i=>!i.productoId))throw new Error('Producto no reconocido por el backend');
+  if(datosEnviar.some(i=>!i.productoId))throw new Error('Este producto ya no está disponible. Actualiza el catálogo e inténtalo otra vez.');
   // Serializar los PUT: de lo contrario una petición anterior y más lenta
   // puede sobrescribir en MySQL el último cambio del cliente.
   const anterior=escriturasCarrito.get(clave)||Promise.resolve();

@@ -88,7 +88,7 @@ export default function AdminUsuarioForm() {
 
     try {
       await guardarUsuario(usuario, original?.correo);
-      Swal.fire("Usuario guardado", "Los datos fueron almacenados en MySQL.", "success").then(() => navigate("/admin/usuarios"));
+      Swal.fire("Usuario guardado", "Los cambios se guardaron correctamente.", "success").then(() => navigate("/admin/usuarios"));
     } catch (error) { Swal.fire("No se pudo guardar", error.message, "error"); }
   }
 

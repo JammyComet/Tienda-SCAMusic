@@ -15,7 +15,7 @@ import { inicializarDatos } from "./data/storage.js";
 try {
   await inicializarDatos();
 } catch (error) {
-  document.getElementById("root").textContent = `No se pudo conectar con Spring Boot: ${error.message}. Comprueba los servicios del backend y vuelve a cargar la página.`;
+  document.getElementById("root").textContent = "No pudimos cargar la tienda. Revisa tu conexión y vuelve a intentarlo.";
   throw error;
 }
 

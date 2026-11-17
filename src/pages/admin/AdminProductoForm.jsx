@@ -78,7 +78,7 @@ export default function AdminProductoForm() {
     };
     try {
       await guardarProducto(p, original?.codigo);
-      Swal.fire("Producto guardado", "Los datos fueron almacenados en MySQL.", "success").then(() => nav("/admin/productos"));
+      Swal.fire("Producto guardado", "Los cambios se guardaron correctamente.", "success").then(() => nav("/admin/productos"));
     } catch (error) { Swal.fire("No se pudo guardar", error.message, "error"); }
   }
 

@@ -31,7 +31,7 @@ export default function Login() {
 
     try {
       const u = await login(correo, pass);
-      await Swal.fire("Inicio de sesión", "Autenticación validada en Spring Boot.", "success");
+      await Swal.fire("¡Bienvenido!", "Has iniciado sesión correctamente.", "success");
       nav(loc.state?.desde || (u.rol === "Administrador" ? "/admin" : u.rol === "Vendedor" ? "/vendedor/productos" : "/"));
     } catch (error) {
       setCredencialesInvalidas(true);

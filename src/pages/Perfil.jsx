@@ -73,10 +73,10 @@ export default function Perfil() {
         Swal.fire("Perfil actualizado", "Tus datos fueron guardados correctamente.", "success");
       }
     } catch (error) {
-      const mensaje = quiereCambiarPassword && error.status === 400
-        ? "No se pudo cambiar la contraseña. Comprueba tu contraseña actual y los requisitos de la nueva."
+      const mensaje = error.status === 401
+        ? "Tu sesión expiró. Inicia sesión nuevamente e inténtalo otra vez."
         : error.message;
-      Swal.fire("No se pudo actualizar", mensaje, "error");
+      Swal.fire(quiereCambiarPassword ? "No se pudo cambiar la contraseña" : "No se pudo actualizar", mensaje, "error");
     } finally {
       setGuardando(false);
     }
