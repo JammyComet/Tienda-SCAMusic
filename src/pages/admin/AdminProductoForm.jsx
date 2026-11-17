@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import { guardarProducto, obtenerCategorias, obtenerProductoPorCodigo, obtenerProductos } from "../../data/storage";
+import { guardarProducto, subirImagenProducto, obtenerCategorias, obtenerProductoPorCodigo, obtenerProductos } from "../../data/storage";
+import { rutaImagen } from "../../utils/format";
 
 const vacio = {
   codigo: "",
@@ -26,6 +27,16 @@ export default function AdminProductoForm() {
   const [f, setF] = useState(original || vacio);
   const [validado, setValidado] = useState(false);
   const [codigoRepetido, setCodigoRepetido] = useState(false);
+  const [archivoImagen, setArchivoImagen] = useState(null);
+  const [imagenYaSubida, setImagenYaSubida] = useState(null);
+  const [vistaPrevia, setVistaPrevia] = useState(null);
+  const [guardando, setGuardando] = useState(false);
+  useEffect(() => {
+    if (!archivoImagen) {setVistaPrevia(null);return;}
+    const url=URL.createObjectURL(archivoImagen);
+    setVistaPrevia(url);
+    return () => URL.revokeObjectURL(url);
+  }, [archivoImagen]);
   const nav = useNavigate();
   const set = (k, v) => {
     setF((x) => ({ ...x, [k]: v }));
@@ -62,6 +73,8 @@ export default function AdminProductoForm() {
       return;
     }
 
+    if (guardando) return;
+    setGuardando(true);
     const p = {
       ...f,
       codigo: f.codigo.trim().toUpperCase(),
@@ -74,12 +87,21 @@ export default function AdminProductoForm() {
       stockCritico: f.stockCritico === "" ? null : Number(f.stockCritico),
       anio: f.anio === "" ? null : Number(f.anio),
       descripcion: f.descripcion.trim(),
-      imagen: f.imagen.trim(),
+      imagen: String(f.imagen || '').trim(),
     };
     try {
+      // Si se eligió una portada, se guarda primero en el servidor y luego
+      // se registra su referencia en el producto. No se solicitan URLs al usuario.
+      if (archivoImagen) {
+        p.imagen=imagenYaSubida || await subirImagenProducto(archivoImagen);
+        if (!imagenYaSubida) setImagenYaSubida(p.imagen);
+      }
       await guardarProducto(p, original?.codigo);
-      Swal.fire("Producto guardado", "Los cambios se guardaron correctamente.", "success").then(() => nav("/admin/productos"));
-    } catch (error) { Swal.fire("No se pudo guardar", error.message, "error"); }
+      await Swal.fire("Producto guardado", "Los cambios se guardaron correctamente.", "success");
+      nav("/admin/productos");
+    } catch (error) {
+      Swal.fire("No se pudo guardar", error.message, "error");
+    } finally { setGuardando(false); }
   }
 
   return (
@@ -189,13 +211,47 @@ export default function AdminProductoForm() {
               </Col>
 
               <Col xs={12}>
-                <Form.Label>Imagen</Form.Label>
-                <Form.Control placeholder="Ej: discos/mi-disco.jpg" value={f.imagen} onChange={(e) => set("imagen", e.target.value)} />
-                <Form.Text>Ruta dentro de public/imagenes.</Form.Text>
+                <Form.Label>Portada del disco</Form.Label>
+                <Form.Control
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+                  disabled={guardando}
+                  onChange={(e) => {
+                    const archivo=e.target.files?.[0];
+                    if (!archivo) return;
+                    const extensiones=/(?:\.jpe?g|\.png|\.webp)$/i;
+                    if (!extensiones.test(archivo.name) || !['image/jpeg','image/png','image/webp'].includes(archivo.type)) {
+                      e.target.value='';
+                      setArchivoImagen(null);
+                      setImagenYaSubida(null);
+                      Swal.fire('Imagen no válida','Selecciona una imagen JPG, PNG o WebP.','warning');
+                      return;
+                    }
+                    if (archivo.size > 5 * 1024 * 1024) {
+                      e.target.value='';
+                      setArchivoImagen(null);
+                      setImagenYaSubida(null);
+                      Swal.fire('Imagen demasiado grande','La imagen no puede superar los 5 MB.','warning');
+                      return;
+                    }
+                    setArchivoImagen(archivo);
+                    setImagenYaSubida(null);
+                  }}
+                />
+                <Form.Text>Selecciona una imagen JPG, PNG o WebP (máximo 5 MB).</Form.Text>
+                <div className="mt-3">
+                  <img
+                    src={vistaPrevia || rutaImagen(f.imagen)}
+                    alt="Vista previa de la portada"
+                    className="rounded border object-fit-contain"
+                    style={{width:'160px',height:'160px'}}
+                  />
+                  {archivoImagen && <div className="text-secondary small mt-1">{archivoImagen.name}</div>}
+                </div>
               </Col>
             </Row>
             <div className="d-flex gap-2 mt-4">
-              <Button type="submit" variant="dark">Guardar producto</Button>
+              <Button type="submit" variant="dark" disabled={guardando}>{guardando ? 'Guardando...' : 'Guardar producto'}</Button>
               <Button as={Link} to="/admin/productos" variant="outline-secondary">Cancelar</Button>
             </div>
           </Form>

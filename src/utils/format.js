@@ -10,7 +10,14 @@ export function formatearFecha(fecha) {
   const fechaCompleta=new Date(fecha);
   return Number.isNaN(fechaCompleta.getTime()) ? 'Fecha inválida' : fechaCompleta.toLocaleString('es-CL',{dateStyle:'medium',timeStyle:'short'});
 }
-export function rutaImagen(imagen) { return imagen ? `/imagenes/${imagen}` : "/imagenes/logo.png"; }
+export function rutaImagen(imagen) {
+  // Las portadas originales siguen en /imagenes; las subidas se sirven desde Spring Boot.
+  if (typeof imagen === 'string' && /^subidos\/[0-9a-f]{32}\.(?:jpg|png|webp)$/.test(imagen)) {
+    const apiBase=(import.meta.env.VITE_API_URL ?? 'http://localhost:8080').replace(/\/$/, '');
+    return `${apiBase}/api/v1/productos/imagenes/${imagen.slice('subidos/'.length)}`;
+  }
+  return imagen ? `/imagenes/${imagen}` : '/imagenes/logo.png';
+}
 export function precioConDescuento(producto) {
   const precio = Number(producto?.precio) || 0;
   const descuento = Number(producto?.descuento);

@@ -25,7 +25,7 @@ function aceptarToken(respuesta){
   venceTokenEn=Date.now()+Number(respuesta.expiresIn || 300)*1000;
 }
 async function realizar(ruta,opciones={},token=null){
-  const headers={...(opciones.body ? {'Content-Type':'application/json'} : {}),...(opciones.headers||{})};
+  const headers={...(opciones.body && !(opciones.body instanceof FormData) ? {'Content-Type':'application/json'} : {}),...(opciones.headers||{})};
   if(token)headers.Authorization=`Bearer ${token}`;
   let respuesta;
   try{respuesta=await fetch(`${API}${ruta}`,{...opciones,credentials:'include',headers});}
@@ -201,6 +201,13 @@ export async function eliminarUsuario(correo){
   const u=obtenerUsuarioPorCorreo(correo);if(!u)return {ok:false,mensaje:'Usuario no encontrado.'};
   try{await api(`/api/v1/admin/usuarios/${u.id}`,{method:'DELETE'});await refrescarPrivados();return {ok:true};}
   catch(e){return {ok:false,mensaje:e.message};}
+}
+export async function subirImagenProducto(archivo){
+  const datosImagen=new FormData();
+  datosImagen.append('archivo',archivo);
+  const respuesta=await api('/api/v1/productos/imagenes',{method:'POST',body:datosImagen});
+  if(!respuesta?.imagen) throw new Error('No se pudo guardar la imagen. Inténtalo nuevamente.');
+  return respuesta.imagen;
 }
 export async function guardarProducto(producto,codigoOriginal=null){
   const ruta=codigoOriginal?`/api/v1/productos/${encodeURIComponent(codigoOriginal)}`:'/api/v1/productos';
