@@ -235,6 +235,19 @@ export async function guardarCategoria(nombre){
   try {await api('/api/v1/categorias',{method:'POST',body:JSON.stringify({nombre:limpio})});guardarDatos('categorias',await api('/api/v1/categorias'));return {ok:true};}
   catch(e){return {ok:false,mensaje:e.message};}
 }
+export async function editarCategoria(id,nombre){
+  const limpio=String(nombre||'').trim();
+  if(!limpio)return {ok:false,mensaje:'Ingresa un nombre para la categoría.'};
+  if(obtenerProductos().some(p=>Number(p.categoriaId)===Number(id)))
+    return {ok:false,mensaje:'Para cambiar el nombre, la categoría no debe tener productos asociados.'};
+  if(obtenerCategorias().some(c=>Number(c.id)!==Number(id)&&c.nombre.toLowerCase()===limpio.toLowerCase()))
+    return {ok:false,mensaje:'Ya existe una categoría con ese nombre.'};
+  try{
+    await api(`/api/v1/categorias/${id}`,{method:'PUT',body:JSON.stringify({nombre:limpio})});
+    guardarDatos('categorias',await api('/api/v1/categorias'));
+    return {ok:true};
+  }catch(e){return {ok:false,mensaje:e.message};}
+}
 export async function eliminarCategoria(id){
   if(obtenerProductos().some(p=>Number(p.categoriaId)===Number(id)))return {ok:false,mensaje:'No puedes eliminar una categoría con productos.'};
   try {await api(`/api/v1/categorias/${id}`,{method:'DELETE'});guardarDatos('categorias',await api('/api/v1/categorias'));return {ok:true};}

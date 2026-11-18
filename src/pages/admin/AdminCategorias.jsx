@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import Swal from "sweetalert2";
 import TablaDatos from "../../components/organisms/TablaDatos";
-import { eliminarCategoria, guardarCategoria, obtenerCategorias, obtenerProductos } from "../../data/storage";
+import { editarCategoria, eliminarCategoria, guardarCategoria, obtenerCategorias, obtenerProductos } from "../../data/storage";
 
 export default function AdminCategorias() {
   const [nombre, setNombre] = useState("");
   const [validado, setValidado] = useState(false);
+  const [editandoId, setEditandoId] = useState(null);
   const [, setVersion] = useState(0);
 
   useEffect(() => {
@@ -20,19 +21,38 @@ export default function AdminCategorias() {
     setValidado(true);
     if (!nombre.trim()) return;
 
-    const resultado = await guardarCategoria(nombre);
+    const resultado = editandoId === null
+      ? await guardarCategoria(nombre)
+      : await editarCategoria(editandoId, nombre);
     if (!resultado.ok) {
       Swal.fire("No se pudo guardar", resultado.mensaje, "warning");
       return;
     }
 
-    Swal.fire("Categoría creada", "La categoría quedó disponible para los productos.", "success");
+    Swal.fire(editandoId === null ? "Categoría creada" : "Categoría actualizada", "Los cambios se guardaron correctamente.", "success");
+    cancelarEdicion();
+  }
+
+  function cancelarEdicion() {
     setNombre("");
+    setValidado(false);
+    setEditandoId(null);
+  }
+
+  function comenzarEdicion(categoria) {
+    const asociados = obtenerProductos().some((producto) => Number(producto.categoriaId) === Number(categoria.id));
+    if (asociados) return;
+    setNombre(categoria.nombre);
+    setEditandoId(categoria.id);
     setValidado(false);
   }
 
   async function eliminar(id) {
-    const categoria = obtenerCategorias().find((item) => item.id === id);
+    const categoria = obtenerCategorias().find((item) => Number(item.id) === Number(id));
+    if (obtenerProductos().some((producto) => Number(producto.categoriaId) === Number(id))) {
+      Swal.fire("No se puede eliminar", "Esta categoría tiene productos asociados.", "warning");
+      return;
+    }
     const confirmacion = await Swal.fire({
       title: `¿Eliminar ${categoria?.nombre || "categoría"}?`,
       icon: "warning",
@@ -47,6 +67,7 @@ export default function AdminCategorias() {
       Swal.fire("No se puede eliminar", resultado.mensaje, "warning");
       return;
     }
+    if (editandoId === id) cancelarEdicion();
     Swal.fire("Categoría eliminada", "La categoría fue eliminada.", "success");
   }
 
@@ -58,14 +79,14 @@ export default function AdminCategorias() {
       <div className="mb-4">
         <p className="text-secondary mb-1">Administración</p>
         <h2 className="fw-bold">Categorías</h2>
-        <p className="text-secondary mb-0">Crea categorías para organizar los productos de la tienda.</p>
+        <p className="text-secondary mb-0">Organiza las categorías de tu tienda.</p>
       </div>
 
       <Row className="g-4">
         <Col lg={4}>
           <Card className="border-0 shadow-sm">
             <Card.Body>
-              <h3 className="h5 fw-bold text-dark">Nueva categoría</h3>
+              <h3 className="h5 fw-bold text-dark">{editandoId === null ? "Nueva categoría" : "Editar categoría"}</h3>
               <Form onSubmit={submit}>
                 <Form.Group className="mb-3">
                   <Form.Label>Nombre</Form.Label>
@@ -77,7 +98,14 @@ export default function AdminCategorias() {
                   />
                   <Form.Control.Feedback type="invalid">Ingresa un nombre para la categoría.</Form.Control.Feedback>
                 </Form.Group>
-                <Button type="submit" variant="dark" className="w-100">Crear categoría</Button>
+                <Button type="submit" variant="dark" className="w-100">
+                  {editandoId === null ? "Crear categoría" : "Guardar cambios"}
+                </Button>
+                {editandoId !== null && (
+                  <Button type="button" variant="outline-secondary" className="w-100 mt-2" onClick={cancelarEdicion}>
+                    Cancelar edición
+                  </Button>
+                )}
               </Form>
             </Card.Body>
           </Card>
@@ -98,9 +126,18 @@ export default function AdminCategorias() {
                       <td><strong>{categoria.nombre}</strong></td>
                       <td>{asociados}</td>
                       <td>
-                        <Button size="sm" variant="outline-danger" onClick={() => eliminar(categoria.id)}>
-                          Eliminar
-                        </Button>
+                        <div className="d-flex gap-2 flex-wrap">
+                          <span title={asociados ? "Esta categoría tiene productos asociados" : "Editar categoría"}>
+                            <Button size="sm" variant="outline-primary" disabled={asociados > 0} onClick={() => comenzarEdicion(categoria)}>
+                              Editar
+                            </Button>
+                          </span>
+                          <span title={asociados ? "Esta categoría tiene productos asociados" : "Eliminar categoría"}>
+                            <Button size="sm" variant="outline-danger" disabled={asociados > 0} onClick={() => eliminar(categoria.id)}>
+                              Eliminar
+                            </Button>
+                          </span>
+                        </div>
                       </td>
                     </tr>
                   );
