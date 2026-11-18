@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { guardarUsuario } from "../data/storage";
 import { REGIONES } from "../data/regiones";
 import { useAuth } from "../hooks/useAuth";
-import { textoRequerido, validarNombre, validarPassword, validarTelefono } from "../utils/validaciones";
+import { textoRequerido, validarNombre, validarPassword, validarTelefono, fechaMaximaNacimiento, validarFechaNacimiento } from "../utils/validaciones";
 
 export default function Perfil() {
   const { usuario, logout } = useAuth();
@@ -27,7 +27,7 @@ export default function Perfil() {
   const errores = {
     nombre: !validarNombre(f.nombre, 50),
     apellidos: !validarNombre(f.apellidos, 100),
-    fechaNacimiento: !f.fechaNacimiento,
+    fechaNacimiento: !validarFechaNacimiento(f.fechaNacimiento),
     telefono: !validarTelefono(f.telefono),
     region: !f.region,
     comuna: !f.comuna || !(REGIONES[f.region] || []).includes(f.comuna),
@@ -114,8 +114,8 @@ export default function Perfil() {
           </Col>
           <Col md={6}>
             <Form.Label>Fecha de nacimiento</Form.Label>
-            <Form.Control type="date" value={f.fechaNacimiento || ""} onChange={(e) => set("fechaNacimiento", e.target.value)} isInvalid={validado && errores.fechaNacimiento} />
-            <Form.Control.Feedback type="invalid">Selecciona tu fecha de nacimiento.</Form.Control.Feedback>
+            <Form.Control type="date" max={fechaMaximaNacimiento()} value={f.fechaNacimiento || ""} onChange={(e) => set("fechaNacimiento", e.target.value)} isInvalid={validado && errores.fechaNacimiento} />
+            <Form.Control.Feedback type="invalid">Debes tener al menos 18 años.</Form.Control.Feedback>
           </Col>
           <Col md={6}>
             <Form.Label>Teléfono</Form.Label>

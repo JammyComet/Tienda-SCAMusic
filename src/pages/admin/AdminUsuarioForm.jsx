@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import { esAdministradorPrincipal, existeCorreo, existeRun, guardarUsuario, obtenerUsuarios } from "../../data/storage";
 import { REGIONES } from "../../data/regiones";
 import { useAuth } from "../../hooks/useAuth";
-import { textoRequerido, validarCorreo, validarNombre, validarPassword, validarRut, validarTelefono } from "../../utils/validaciones";
+import { textoRequerido, validarCorreo, validarNombre, validarPassword, validarRut, validarTelefono, fechaMaximaNacimiento, validarFechaNacimiento } from "../../utils/validaciones";
 
 const vacio = {
   run: "",
@@ -45,7 +45,7 @@ export default function AdminUsuarioForm() {
     nombre: !validarNombre(formulario.nombre, 50),
     apellidos: !validarNombre(formulario.apellidos, 100),
     correo: !validarCorreo(formulario.correo),
-    fechaNacimiento: !formulario.fechaNacimiento,
+    fechaNacimiento: !validarFechaNacimiento(formulario.fechaNacimiento),
     contrasena: !esEdicion && !validarPassword(formulario.contrasena),
     confirmar: !esEdicion && (formulario.confirmar !== formulario.contrasena || !formulario.confirmar),
     telefono: !validarTelefono(formulario.telefono),
@@ -145,8 +145,8 @@ export default function AdminUsuarioForm() {
 
               <Col md={6}>
                 <Form.Label>Fecha nacimiento</Form.Label>
-                <Form.Control type="date" value={formulario.fechaNacimiento || ""} onChange={(e) => set("fechaNacimiento", e.target.value)} isInvalid={validado && errores.fechaNacimiento} />
-                <Form.Control.Feedback type="invalid">Selecciona la fecha de nacimiento.</Form.Control.Feedback>
+                <Form.Control type="date" max={fechaMaximaNacimiento()} value={formulario.fechaNacimiento || ""} onChange={(e) => set("fechaNacimiento", e.target.value)} isInvalid={validado && errores.fechaNacimiento} />
+                <Form.Control.Feedback type="invalid">La persona debe tener al menos 18 años.</Form.Control.Feedback>
               </Col>
 
               {!esEdicion && (

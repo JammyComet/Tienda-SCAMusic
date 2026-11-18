@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { existeCorreo, existeRun, guardarUsuario } from "../data/storage";
-import { textoRequerido, validarCorreo, validarNombre, validarPassword, validarRut, validarTelefono } from "../utils/validaciones";
+import { textoRequerido, validarCorreo, validarNombre, validarPassword, validarRut, validarTelefono, fechaMaximaNacimiento, validarFechaNacimiento } from "../utils/validaciones";
 import { REGIONES } from "../data/regiones";
 
 const inicial = {
@@ -30,7 +30,7 @@ export default function Registro() {
     nombre: !validarNombre(f.nombre, 50),
     apellidos: !validarNombre(f.apellidos, 100),
     correo: !validarCorreo(f.correo),
-    fechaNacimiento: !f.fechaNacimiento,
+    fechaNacimiento: !validarFechaNacimiento(f.fechaNacimiento),
     telefono: !validarTelefono(f.telefono),
     contrasena: !validarPassword(f.contrasena),
     confirmar: !f.confirmar || f.confirmar !== f.contrasena,
@@ -138,10 +138,11 @@ export default function Registro() {
                   <Form.Control
                     type="date"
                     value={f.fechaNacimiento}
+                    max={fechaMaximaNacimiento()}
                     onChange={(e) => set("fechaNacimiento", e.target.value)}
                     isInvalid={validado && errores.fechaNacimiento}
                   />
-                  <Form.Control.Feedback type="invalid">Selecciona tu fecha de nacimiento.</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">Debes tener al menos 18 años para registrarte.</Form.Control.Feedback>
                 </Col>
 
                 <Col md={6}>

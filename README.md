@@ -32,7 +32,7 @@ El carrito del invitado es temporal en memoria; cuando se autentica como cliente
 
 ## Pruebas
 
-`npm test` utiliza las pruebas existentes en `test/`, adaptadas en formularios al flujo HTTP. También hay pruebas JUnit del JWT y del catálogo en los microservicios. En el entorno de generación no fue posible descargar todas las dependencias para ejecutar la compilación completa de Vite/Maven: ejecutar ambos builds y probar contra MySQL antes de la entrega.
+`npm test` utiliza las pruebas existentes en `test/`, adaptadas en formularios al flujo HTTP. La validación de edad se ejecuta con `npm run test:edad` y está en la misma carpeta `test/`. También hay pruebas JUnit del JWT y del catálogo en los microservicios. En el entorno de generación no fue posible descargar todas las dependencias para ejecutar la compilación completa de Vite/Maven: ejecutar ambos builds y probar contra MySQL antes de la entrega.
 
 ## Correspondencia con los microservicios
 
