@@ -1061,6 +1061,46 @@ footer a { color:white; text-decoration:none; }
     background: #111;
 }
 
+/* Controles del carrusel principal: zona táctil amplia y siempre por encima
+   del contenido del banner. El control anterior quedaba detrás del texto. */
+.home-main-carousel .carousel-control-prev,
+.home-main-carousel .carousel-control-next {
+    top: 50%;
+    bottom: auto;
+    width: 58px;
+    height: 58px;
+    transform: translateY(-50%);
+    z-index: 5;
+    opacity: 1;
+    border: 1px solid rgba(255, 255, 255, .35);
+    border-radius: 50%;
+    background-color: rgba(16, 16, 16, .78);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .25);
+    transition: background-color .18s ease, box-shadow .18s ease;
+}
+
+.home-main-carousel .carousel-control-prev { left: 14px; }
+.home-main-carousel .carousel-control-next { right: 14px; }
+
+.home-main-carousel .carousel-control-prev:hover,
+.home-main-carousel .carousel-control-next:hover {
+    background-color: rgba(16, 16, 16, .98);
+    box-shadow: 0 5px 16px rgba(0, 0, 0, .35);
+}
+
+.home-main-carousel .carousel-control-prev:focus-visible,
+.home-main-carousel .carousel-control-next:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+}
+
+.home-main-carousel .carousel-control-prev-icon,
+.home-main-carousel .carousel-control-next-icon {
+    width: 25px;
+    height: 25px;
+    background-size: contain;
+}
+
 .home-banner {
     position: relative;
     min-height: 410px;
@@ -1142,6 +1182,17 @@ footer a { color:white; text-decoration:none; }
 }
 
 @media (max-width: 767.98px) {
+    .home-main-carousel .carousel-control-prev,
+    .home-main-carousel .carousel-control-next {
+        top: 12px;
+        width: 52px;
+        height: 52px;
+        transform: none;
+    }
+
+    .home-main-carousel .carousel-control-prev { left: 12px; }
+    .home-main-carousel .carousel-control-next { right: 12px; }
+
     .home-banner,
     .home-banner-image {
         min-height: 360px;

@@ -37,7 +37,7 @@ export default function Home() {
     <div className="home-marketplace">
       <section className="home-hero-section py-4">
         <Container fluid className="px-3 px-lg-5">
-          <Carousel className="home-main-carousel shadow-sm" interval={5000}>
+          <Carousel className="home-main-carousel shadow-sm" interval={5000} prevLabel="Anterior" nextLabel="Siguiente">
             {banners.map((banner) => (
               <Carousel.Item key={banner.titulo}>
                 <div className="home-banner">
