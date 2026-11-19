@@ -27,7 +27,6 @@ export default function Contacto() {
       nombre: f.nombre.trim(),
       correo: f.correo.trim().toLowerCase(),
       comentario: f.comentario.trim(),
-      fecha: new Date().toISOString().slice(0, 10),
     });
     } catch (error) { Swal.fire("No se pudo enviar", error.message, "error"); return; }
     Swal.fire("Mensaje enviado", "Gracias por escribirnos, te responderemos pronto.", "success");

@@ -9,7 +9,22 @@ const SOLICITUD_SESION = {'X-Requested-With':'SCAMusica'};
 export const STORAGE_KEYS = { usuarios:'usuarios',productos:'productos',categorias:'categorias',ordenes:'ordenes',contactos:'contactos',carrito:'carrito',sesion:'sesion' };
 export const ADMIN_PRINCIPAL_CORREO = 'admin@duoc.cl';
 const datos = {usuarios:[], productos:[], categorias:[], ordenes:[], boletas:[], reportesResumen:null, inventarioCritico:[], contactos:[]};
-const carritos = new Map([['invitado', []]]);
+// Persistir solo código y cantidad en esta pestaña: nunca tokens ni datos de clientes.
+const CLAVE_CARRITO_INVITADO = 'scamusica-carrito-invitado-v1';
+const CLAVE_COMPRA_PENDIENTE = 'scamusica-compra-pendiente-v1';
+function leerCarritoInvitado(){
+  try {
+    const valor=JSON.parse(sessionStorage.getItem(CLAVE_CARRITO_INVITADO)||'[]');
+    if(!Array.isArray(valor))return [];
+    return valor.filter(i=>i&&typeof i.codigo==='string'&&Number.isSafeInteger(i.cantidad)&&i.cantidad>0)
+      .slice(0,100).map(i=>({codigo:i.codigo,cantidad:i.cantidad}));
+  } catch {return [];}
+}
+function persistirCarritoInvitado(items){
+  try {sessionStorage.setItem(CLAVE_CARRITO_INVITADO,JSON.stringify(items.map(i=>({codigo:i.codigo,cantidad:i.cantidad}))));}
+  catch { /* Sesión privada sin almacenamiento: el carrito sigue funcionando en memoria. */ }
+}
+const carritos = new Map([['invitado', leerCarritoInvitado()]]);
 // Cola por carrito: dos clicks seguidos nunca pueden escribir en MySQL fuera de orden.
 const escriturasCarrito = new Map();
 let sesion = null;
@@ -258,10 +273,37 @@ export const generarCodigoOrden=()=>null; // El servidor genera números únicos
 export const generarNumeroBoleta=()=>null;
 export const obtenerOrdenPorCodigo=codigo=>obtenerOrdenes().find(o=>o.codigo===codigo);
 export const obtenerBoletaPorNumero=numero=>obtenerBoletas().find(o=>o.boletaNumero===numero);
+async function firmaCompra(orden){
+  // La sesión guarda únicamente el hash; nunca dirección, RUN ni datos de pago.
+  const contenido=new TextEncoder().encode(JSON.stringify({usuarioId:sesion?.id,orden}));
+  const buffer=await crypto.subtle.digest('SHA-256',contenido);
+  return Array.from(new Uint8Array(buffer),x=>x.toString(16).padStart(2,'0')).join('');
+}
+function recuperarClaveCompra(firma){
+  try{
+    const anterior=JSON.parse(sessionStorage.getItem(CLAVE_COMPRA_PENDIENTE)||'null');
+    if(anterior?.firma===firma&&typeof anterior?.clave==='string')return anterior.clave;
+  }catch{/* Crear una clave nueva si no existe una válida. */}
+  const clave=crypto.randomUUID();
+  try{sessionStorage.setItem(CLAVE_COMPRA_PENDIENTE,JSON.stringify({firma,clave}));}catch{}
+  return clave;
+}
 export async function guardarOrden(orden){
   // El POST es la operación que realmente registra la compra. Si una consulta
   // posterior falla, NO informar un pago fallido: podría provocar compras duplicadas.
-  const guardado=await api('/api/v1/ordenes',{method:'POST',body:JSON.stringify(orden)});
+  const firma=await firmaCompra(orden);
+  const clave=recuperarClaveCompra(firma);
+  let guardado;
+  try{
+    guardado=await api('/api/v1/ordenes',{method:'POST',headers:{'Idempotency-Key':clave},body:JSON.stringify(orden)});
+  }catch(error){
+    // Conservar la clave ante errores de red o timeout: el servidor pudo registrar
+    // la compra. El siguiente intento repetirá la MISMA operación, sin duplicarla.
+    if(!error.status || error.status>=500)
+      throw new Error('No pudimos confirmar el resultado de la compra. Revisa Mis boletas antes de volver a intentarlo; el mismo intento no se registrará dos veces.');
+    throw error;
+  }
+  try{sessionStorage.removeItem(CLAVE_COMPRA_PENDIENTE);}catch{}
   if(!obtenerOrdenes().some(o=>o.codigo===guardado.codigo)){
     guardarDatos('ordenes',[guardado,...obtenerOrdenes()]);
   }
@@ -277,7 +319,7 @@ export function obtenerCarrito(usuario=sesion){return [...(carritos.get(obtenerC
 export async function guardarCarrito(items,usuario=sesion){
   const clave=obtenerClaveCarrito(usuario);
   const copia=items.map(i=>({...i}));
-  if(!usuario){carritos.set(clave,copia);emitirCambio();return;}
+  if(!usuario){carritos.set(clave,copia);persistirCarritoInvitado(copia);emitirCambio();return;}
   const idUsuario=usuario.id;
   const datosEnviar=copia.map(i=>({productoId:obtenerProductoPorCodigo(i.codigo)?.id,cantidad:i.cantidad}));
   if(datosEnviar.some(i=>!i.productoId))throw new Error('Este producto ya no está disponible. Actualiza el catálogo e inténtalo otra vez.');
@@ -304,5 +346,5 @@ export async function pasarCarritoInvitadoAUsuario(usuario){
     else if(max>0)actual.push({...nuevo,cantidad:Math.min(max,nuevo.cantidad)});
   }
   await guardarCarrito(actual.filter(i=>i.cantidad>0),usuario);
-  carritos.set('invitado',[]);emitirCambio();
+  carritos.set('invitado',[]);persistirCarritoInvitado([]);emitirCambio();
 }

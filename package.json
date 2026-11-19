@@ -9,8 +9,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "karma start karma.conf.cjs --single-run",
-    "test:watch": "karma start karma.conf.cjs --no-single-run --browsers Chrome",
-    "test:edad": "node --test test/validacion-edad.test.mjs"
+    "test:watch": "karma start karma.conf.cjs --no-single-run --browsers Chrome"
   },
   "dependencies": {
     "bootstrap": "^5.3.8",
