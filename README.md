@@ -1,69 +1,68 @@
-# SCAMusica — React integrado con Spring Boot
+# SCAMusica — Frontend React
 
-Se mantiene la estructura React 19, Vite, Atomic Design, Context API y todas las pantallas del proyecto original. **Los datos ya no se guardan en localStorage**: los productos, categorías, usuarios, carritos, compras, boletas, reportes, inventario y contactos se cargan/escriben mediante `fetch` hacia el Gateway de Spring Boot.
+Tienda desarrollada con **React y Vite**, conectada mediante API REST al backend Spring Boot.
 
-## Inicio
+## Abrir la tienda
 
-1. Instala y ejecuta el backend en `../musica-parent` según su `README.md` (MySQL, Eureka, Gateway y los microservicios requeridos). El frontend **no** utiliza los datos ficticios si Spring Boot está apagado.
-   El backend de esta versión contiene **6 microservicios de negocio**, además de Eureka y el Gateway.
-2. Abre esta carpeta y ejecuta `npm install` y `npm run dev`.
-3. Abre `http://localhost:5173` (puerto Vite predeterminado).
-4. Si el Gateway está en otro host, configura `VITE_API_URL` con su URL (por defecto `http://localhost:8080`).
+Con Docker, desde la carpeta `SCAMusica-Backend`, ejecuta `.\iniciar.ps1` en PowerShell y abre:
 
-## Acceso de demostración (servidor ms-auth)
+**http://localhost:5173**
 
-- Administrador: `admin@duoc.cl`
-- Vendedor: `vendedor@duoc.cl`
-- Cliente: `cliente@gmail.com`
+Para ejecutar React por separado, con **Node.js y npm** instalados, abre una terminal en `Tienda-SCAMusic-main`:
 
-**No tienen contraseñas públicas predeterminadas.** El backend las crea solo cuando se configura
-`SEED_DEMO_USERS=true` junto con `DEMO_ADMIN_PASSWORD`, `DEMO_VENDEDOR_PASSWORD` y
-`DEMO_CLIENTE_PASSWORD` (al menos 8 caracteres cada una). La configuración local se encuentra en el archivo `.env` generado por `iniciar.ps1`.
-Las contraseñas se almacenan mediante BCrypt en MySQL.
+```powershell
+npm install
+npm run dev
+```
 
-## Sesión y permisos
+El backend debe estar funcionando para cargar los datos.
 
-El login solicita `/api/v1/auth/login` y recibe JWT de **5 minutos**; el perfil se obtiene de
-`/api/v1/usuarios/me`. React mantiene el JWT solo en **memoria** y lo renueva automáticamente usando
-una cookie `HttpOnly` que recibe del backend y que el código React no puede leer. Así se conserva la sesión
-tras recargas, sin almacenar contraseñas ni tokens en LocalStorage/SessionStorage. El vendedor solo ve productos y órdenes, el cliente utiliza la tienda, el administrador gestiona el sistema. Spring Boot valida permisos además del frontend.
+## Cuentas de prueba (solo entorno local)
 
-El carrito del invitado conserva **solo códigos y cantidades** en `sessionStorage` de esa pestaña:
-permanece después de F5 y se fusiona con `ms-carrito` al iniciar sesión como cliente.
-No se guardan tokens ni datos personales allí. Al cerrar la pestaña, el carrito de invitado puede perderse.
+| Rol | Correo | Contraseña demo |
+|---|---|---|
+| Administrador | `admin@duoc.cl` | `scamusica123` |
+| Vendedor | `vendedor@duoc.cl` | `scamusica123` |
+| Cliente | `cliente@gmail.com` | `scamusica123` |
 
-Al enviar una compra, React utiliza una cabecera `Idempotency-Key` única. Si falla la red
-antes de confirmar el resultado, conserva la clave de ese intento (no los datos del cliente)
-para poder reintentarlo sin registrar dos veces el mismo pedido.
+Estas son las credenciales que crea **`iniciar.ps1` en un entorno nuevo**, según el script entregado. Si ya existía un `.env` o se cambiaron las contraseñas, podrían ser distintas. Para restablecerlas en un entorno local se puede ejecutar `.\actualizar-claves-demo.ps1` desde la carpeta raíz del backend; esto invalida las sesiones demo previas. **No usar estas credenciales en producción.**
 
-## Pruebas
+## Pruebas del frontend
 
-`node --experimental-vm-modules test/test-storage.mjs` comprueba persistencia del carrito invitado y reintentos idempotentes. `npm test` utiliza las pruebas existentes en `test/`, adaptadas en formularios al flujo HTTP. También hay pruebas JUnit del JWT y del catálogo en los microservicios. En el entorno de generación no fue posible descargar todas las dependencias para ejecutar la compilación completa de Vite/Maven: ejecutar ambos builds y probar contra MySQL antes de la entrega.
+Desde `Tienda-SCAMusic-main`, instala primero las dependencias con `npm install`.
 
-## Correspondencia con los microservicios
+**Pruebas de componentes (Karma + Jasmine; necesitan Chrome):**
 
-| Función que ya existía en React | Servicio backend |
-|---|---|
-| Login, registro y perfil | `ms-auth` |
-| Administración de usuarios | `ms-auth` |
-| Productos y ofertas | `ms-catalogo` |
-| Categorías | `ms-categorias` |
-| Carrito | `ms-carrito` |
-| Compras y órdenes | `ms-pedido` |
-| Mis boletas y boletas del administrador | `ms-pedido` |
-| Formulario de contacto | `ms-auth` |
-| Stock crítico del administrador | `ms-catalogo` |
-| Resumen de ventas y dashboard | `ms-reportes` |
+```powershell
+npm test
+```
 
-Blog y Nosotros mantienen su contenido estático porque no tenían operaciones de negocio que
-justificaran añadir bases de datos o servicios nuevos. Se conservaron todos los componentes,
-estilos y rutas visuales. El archivo `src/data/storage.js` mantiene el nombre original únicamente
-para no romper las importaciones existentes, pero ahora funciona como adaptador de API REST.
+**Pruebas en modo observación:**
 
-## Ejecutar el frontend con Docker
+```powershell
+npm run test:watch
+```
 
-Desde la carpeta raíz del paquete completo, usa `iniciar.ps1` o
-`docker compose up --build -d`. React queda disponible en `http://localhost:5173`.
-Nginx reenvía las peticiones `/api/...` a Spring Boot. La configuración Docker
-usa `VITE_API_URL` vacío de manera intencional; no es necesario editar el código.
-Fuera de Docker, `npm run dev` sigue apuntando al Gateway local en `:8080`.
+**Pruebas adicionales de regresión y validaciones (Node.js):**
+
+```powershell
+node test/RegresionStorage.mjs
+node test/RegresionCambioContrasena.mjs
+node --test tests/validacion-edad.test.mjs
+node --experimental-vm-modules scripts/test-storage.mjs
+```
+
+Las pruebas de componentes están en `test/*.spec.js`. También existen las pruebas adicionales en `test/`, `tests/` y `scripts/`, con los nombres indicados arriba.
+
+**Compilar el frontend:**
+
+```powershell
+npm run build
+```
+
+## Archivos principales
+
+- `src/App.jsx`: navegación y rutas.
+- `src/components/organisms/ProtectedRoute.jsx`: restricciones por rol.
+- `src/context/AuthContext.jsx`: sesión y usuario actual.
+- `src/data/storage.js`: llamadas REST al backend, carrito y compras.
